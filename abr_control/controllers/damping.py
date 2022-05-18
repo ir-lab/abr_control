@@ -13,10 +13,11 @@ class Damping(Controller):
         such as: number of joints, number of links, mass information etc.
     """
 
-    def __init__(self, robot_config, kv):
+    def __init__(self, robot_config, kv,arm_num=0):
         super().__init__(robot_config)
 
         self.kv = kv
+        self.arm_num = arm_num
 
     def generate(self, q, dq):
         """Generates the control signal
@@ -28,5 +29,5 @@ class Damping(Controller):
         """
 
         # calculate joint space inertia matrix
-        M = self.robot_config.M(q=q)
+        M = self.robot_config.M(q=q,arm_num=self.arm_num)
         return np.dot(M, -self.kv * dq)

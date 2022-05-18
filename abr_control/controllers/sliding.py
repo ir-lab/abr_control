@@ -23,13 +23,14 @@ class Sliding(Controller):
 
     """
 
-    def __init__(self, robot_config, kd=160.0, lamb=30.0, cartesian=True):
+    def __init__(self, robot_config, kd=160.0, lamb=30.0, cartesian=True, arm_num=0):
 
         super().__init__(robot_config)
 
         self.kd = kd
         self.lamb = lamb
         self.cartesian = cartesian
+        self.arm_num = arm_num
 
     def generate(
         self,
@@ -63,7 +64,7 @@ class Sliding(Controller):
 
         if self.cartesian:
             # calculate the position Jacobian for the end effector
-            J = self.robot_config.J(ref_frame, q, x=offset)[:3]
+            J = self.robot_config.J(ref_frame, q, x=offset, arm_num=self.arm_num)[:3]
 
             # calculate the end-effector position information
             xyz = self.robot_config.Tx(ref_frame, q, x=offset)
@@ -88,11 +89,11 @@ class Sliding(Controller):
         self.s = dq - dq_ref
 
         # calculate the inertia matrix in joint space
-        M = self.robot_config.M(q)
+        M = self.robot_config.M(q,arm_num=self.arm_num)
         # calculate the partial centrifugal and Coriolis effects
-        C = self.robot_config.C(q=q, dq=dq)
+        C = self.robot_config.C(q=q, dq=dq,arm_num=self.arm_num)
         # calculate the effects of gravity
-        g = self.robot_config.g(q=q)
+        g = self.robot_config.g(q=q,arm_num=self.arm_num)
 
         u = np.dot(M, ddq_ref) + np.dot(C, dq_ref) + g - self.kd * self.s
 

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 from abr_control.utils import transformations
 
@@ -19,11 +20,14 @@ class InverseKinematics:
         the speed [rad/sec] to maintain each step
     """
 
-    def __init__(self, robot_config, max_dx=0.2, max_dr=2 * np.pi, max_dq=np.pi):
+    def __init__(self,robot_config,max_dx=0.2, max_dr=2 * np.pi, max_dq=np.pi, arm_num=0,):
         self.robot_config = robot_config
         self.max_dx = max_dx
         self.max_dr = max_dr
         self.max_dq = max_dq
+        #self.body_name = body_name
+        self.arm_num = arm_num
+        self.body_name = robot_config.arm[arm_num].ee
 
     def generate_path(
         self,
@@ -63,6 +67,7 @@ class InverseKinematics:
         ee_track = []
         ee_err = []
         ea_err = []
+        jacob = []
 
         # set the largest allowable step in joint position
         max_dq = self.max_dq * dt
@@ -70,6 +75,8 @@ class InverseKinematics:
         max_dx = self.max_dx * dt
         # set the largest allowable step in hand (alpha, beta, gamma)
         max_dr = self.max_dr * dt
+        
+        self.target = np.array([target_position[0],target_position[1],target_position[2]])
 
         Qd = np.array(
             transformations.unit_vector(
@@ -84,13 +91,13 @@ class InverseKinematics:
 
         q = np.copy(position)
         for ii in range(n_timesteps):
-            J = self.robot_config.J("EE", q=q)
-            Tx = self.robot_config.Tx("EE", q=q)
+            J = self.robot_config.J(self.body_name,arm_num=self.arm_num,q=q)
+            Tx = self.robot_config.Tx(self.body_name, q=q)
             ee_track.append(Tx)
 
             dx = target_position[:3] - Tx
 
-            Qe = self.robot_config.quaternion("EE", q=q)
+            Qe = self.robot_config.quaternion(self.body_name, q=q)
             # Method 4
             dr = Qe[0] * Qd[1:] - Qd[0] * Qe[1:] - np.cross(Qd[1:], Qe[1:])
 
@@ -123,7 +130,7 @@ class InverseKinematics:
             if method == 3:
                 # Primary position IK, control orientation in null space
                 dq = np.dot(pinv_Jx, dx) + np.dot(
-                    np.eye(self.robot_config.N_JOINTS) - np.dot(pinv_Jx, Jx),
+                    np.eye(self.robot_config.N_JOINTS[self.arm_num]) - np.dot(pinv_Jx, Jx),
                     np.dot(np.linalg.pinv(J[3:]), dr),
                 )
 
@@ -160,8 +167,8 @@ class InverseKinematics:
         # reset position_path index
         self.n_timesteps = n_timesteps
         self.n = 0
-        self.position_path = path[:, : self.robot_config.N_JOINTS]
-        self.velocity_path = path[:, self.robot_config.N_JOINTS :]
+        self.position_path = path[:, : self.robot_config.N_JOINTS[self.arm_num]]
+        self.velocity_path = path[:, self.robot_config.N_JOINTS[self.arm_num] :]
 
         return self.position_path, self.velocity_path
 
@@ -174,7 +181,7 @@ class InverseKinematics:
         )
 
         self.velocity = (
-            self.position_path[self.n] if self.n < self.n_timesteps else self.velocity
+            self.position_path[self.n] if self.n < self.n_timesteps else self.target
         )
         self.n = min(self.n + 1, self.n_timesteps)
 

@@ -3,6 +3,7 @@ import numpy as np
 from mujoco_py.generated import const
 
 from abr_control.utils import transformations
+from abr_control.arms import arms
 
 from .interface import Interface
 
@@ -59,57 +60,26 @@ class Mujoco(Interface):
         self.sim.forward()  # run forward to fill in sim.data
         model = self.sim.model
         self.model = model
+        
+        joint_ids = []
 
         if joint_names is None:
-            joint_ids, joint_names = self.get_joints_in_ee_kinematic_tree()
+            joint_names = []
+            joint_names.append([])
+            joint_ids.append([])
+            joint_ids[0], joint_names[0] = self.get_joints_in_ee_kinematic_tree()
         else:
-            joint_ids = [model.joint_name2id(name) for name in joint_names]
-        self.joint_pos_addrs = [model.get_joint_qpos_addr(name) for name in joint_names]
-        self.joint_vel_addrs = [model.get_joint_qvel_addr(name) for name in joint_names]
+            
+            joint_names = np.asmatrix(joint_names)
+            joint_names = joint_names.tolist()
 
-        joint_pos_addrs = []
-        for elem in self.joint_pos_addrs:
-            if isinstance(elem, tuple):
-                joint_pos_addrs += list(range(elem[0], elem[1]))
-            else:
-                joint_pos_addrs.append(elem)
-        self.joint_pos_addrs = joint_pos_addrs
+            for i in range(len(joint_names)):
+                joint_ids.append([])
+                joint_ids[i] = [model.joint_name2id(name) for name in joint_names[i]]
+      
 
-        joint_vel_addrs = []
-        for elem in self.joint_vel_addrs:
-            if isinstance(elem, tuple):
-                joint_vel_addrs += list(range(elem[0], elem[1]))
-            else:
-                joint_vel_addrs.append(elem)
-        self.joint_vel_addrs = joint_vel_addrs
-
-        # Need to also get the joint rows of the Jacobian, inertia matrix, and
-        # gravity vector. This is trickier because if there's a quaternion in
-        # the joint (e.g. a free joint or a ball joint) then the joint position
-        # address will be different than the joint Jacobian row. This is because
-        # the quaternion joint will have a 4D position and a 3D derivative. So
-        # we go through all the joints, and find out what type they are, then
-        # calculate the Jacobian position based on their order and type.
-        index = 0
-        self.joint_dyn_addrs = []
-        for ii, joint_type in enumerate(model.jnt_type):
-            if ii in joint_ids:
-                self.joint_dyn_addrs.append(index)
-            if joint_type == 0:  # free joint
-                self.joint_dyn_addrs += [jj + index for jj in range(1, 6)]
-                index += 6  # derivative has 6 dimensions
-            elif joint_type == 1:  # ball joint
-                self.joint_dyn_addrs += [jj + index for jj in range(1, 3)]
-                index += 3  # derivative has 3 dimension
-            else:  # slide or hinge joint
-                index += 1  # derivative has 1 dimensions
-
-        # give the robot config access to the sim for wrapping the
-        # forward kinematics / dynamics functions
-        self.robot_config._connect(
-            self.sim, self.joint_pos_addrs, self.joint_vel_addrs, self.joint_dyn_addrs
-        )
-
+        self.arm = [arms.arms(self.robot_config,self.sim,joint_names[i],joint_ids[i]) for i in range(len(joint_ids))]
+        self.robot_config._connect(self.sim,self.arm)
         # if we want to use the offscreen render context create it before the
         # viewer so the corresponding window is behind the viewer
         if self.create_offscreen_rendercontext:
@@ -196,7 +166,7 @@ class Mujoco(Interface):
         """
         self.sim.data.set_mocap_quat(name, quat)
 
-    def send_forces(self, u, update_display=True):
+    def send_forces(self, u, update_display=True, arm_num=0):
         """Apply the specified torque to the robot joints
 
         Apply the specified torque to the robot joints, move the simulation
@@ -212,19 +182,19 @@ class Mujoco(Interface):
 
         # NOTE: the qpos_addr's are unrelated to the order of the motors
         # NOTE: assuming that the robot arm motors are the first len(u) values
-        self.sim.data.ctrl[:] = u[:]
+        self.sim.data.ctrl[self.arm[arm_num].ctrl_index] = u[:]
 
         # move simulation ahead one time step
         self.sim.step()
 
-        # Update position of hand object
+        '''# Update position of hand object
         feedback = self.get_feedback()
         hand_xyz = self.robot_config.Tx(name="EE", q=feedback["q"])
         self.set_mocap_xyz("hand", hand_xyz)
 
         # Update orientation of hand object
         hand_quat = self.robot_config.quaternion(name="EE", q=feedback["q"])
-        self.set_mocap_orientation("hand", hand_quat)
+        self.set_mocap_orientation("hand", hand_quat)'''
 
         if self.visualize and update_display:
             self.viewer.render()
@@ -243,7 +213,7 @@ class Mujoco(Interface):
         """
         self.sim.data.xfrc_applied[self.model.body_name2id(name)] = u_ext
 
-    def send_target_angles(self, q):
+    def send_target_angles(self, q,arm_num=0):
         """Move the robot to the specified configuration.
 
         Parameters
@@ -252,10 +222,10 @@ class Mujoco(Interface):
             configuration to move to [radians]
         """
 
-        self.sim.data.qpos[self.joint_pos_addrs] = np.copy(q)
+        self.sim.data.qpos[self.arm[arm_num].joint_pos_addrs] = np.copy(q)
         self.sim.forward()
 
-    def set_joint_state(self, q, dq):
+    def set_joint_state(self, q, dq,arm_num=0):
         """Move the robot to the specified configuration.
 
         Parameters
@@ -266,19 +236,19 @@ class Mujoco(Interface):
             joint velocities [rad/s]
         """
 
-        self.sim.data.qpos[self.joint_pos_addrs] = np.copy(q)
-        self.sim.data.qvel[self.joint_vel_addrs] = np.copy(dq)
+        self.sim.data.qpos[self.arm[arm_num].joint_pos_addrs] = np.copy(q)
+        self.sim.data.qvel[self.arm[arm_num].joint_pos_addrs] = np.copy(dq)
         self.sim.forward()
 
-    def get_feedback(self):
+    def get_feedback(self,arm_num=0):
         """Return a dictionary of information needed by the controller.
 
         Returns the joint angles and joint velocities in [rad] and [rad/sec],
         respectively
         """
 
-        self.q = np.copy(self.sim.data.qpos[self.joint_pos_addrs])
-        self.dq = np.copy(self.sim.data.qvel[self.joint_vel_addrs])
+        self.q = np.copy(self.sim.data.qpos[self.arm[arm_num].joint_pos_addrs])
+        self.dq = np.copy(self.sim.data.qvel[self.arm[arm_num].joint_vel_addrs])
 
         return {"q": self.q, "dq": self.dq}
 

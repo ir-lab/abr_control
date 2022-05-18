@@ -24,14 +24,16 @@ class Joint(Controller):
     """
 
     def __init__(
-        self, robot_config, kp=1, kv=None, quaternions=None, account_for_gravity=True
+        self, robot_config, kp=1, kv=None, quaternions=None, account_for_gravity=True, arm_num=0
     ):
         super().__init__(robot_config)
 
+        self.arm_num = arm_num
         self.kp = kp
         self.kv = np.sqrt(self.kp) if kv is None else kv
         self.account_for_gravity = account_for_gravity
-        self.ZEROS_N_JOINTS = np.zeros(robot_config.N_JOINTS)
+        self.ZEROS_N_JOINTS = np.zeros(robot_config.N_JOINTS[self.arm_num])
+        
 
         if quaternions is not None:
             self.quaternions = quaternions
@@ -122,10 +124,10 @@ class Joint(Controller):
         q_tilde = self.q_tilde(q, target)
 
         # get the joint space inertia matrix
-        M = self.robot_config.M(q)
+        M = self.robot_config.M(q,arm_num = self.arm_num)
         u = np.dot(M, (self.kp * q_tilde + self.kv * (target_velocity - dq)))
         # account for gravity
         if self.account_for_gravity:
-            u -= self.robot_config.g(q)
+            u -= self.robot_config.g(q,arm_num=self.arm_num)
 
         return u

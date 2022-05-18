@@ -24,13 +24,15 @@ class AvoidObstacles(Controller):
     """
 
     def __init__(
-        self, robot_config, obstacles=None, threshold=0.2, gain=1, maximum=500
+        self, robot_config, obstacles=None, threshold=0.2, gain=1, maximum=500, arm_num=0
     ):
         super().__init__(robot_config)
 
         self.threshold = threshold
         self.gain = gain
         self.maximum = maximum
+        self.arm_num = arm_num
+        self.body_name = robot_config.arm[arm_num].ee
 
         obstacles = [] if obstacles is None else obstacles
         self.obstacles = np.array(obstacles)
@@ -47,10 +49,10 @@ class AvoidObstacles(Controller):
           NOTE: Not used in this function
         """
 
-        u_psp = np.zeros(self.robot_config.N_JOINTS)
+        u_psp = np.zeros(self.robot_config.N_JOINTS[self.arm_num])
 
         # calculate joint space inertia matrix
-        M = self.robot_config.M(q=q)
+        M = self.robot_config.M(q=q,arm_num=self.arm_num)
 
         # add in obstacle avoidance
         for obstacle in self.obstacles:
@@ -58,11 +60,11 @@ class AvoidObstacles(Controller):
             v = np.array(obstacle[:3])
 
             # find the closest point of each link to the obstacle
-            for ii in range(self.robot_config.N_JOINTS):
+            for ii in range(self.robot_config.N_JOINTS[self.arm_num]):
                 # get the start and end-points of the arm segment
                 p1 = self.robot_config.Tx(f"joint{ii}", q=q)
-                if ii == self.robot_config.N_JOINTS - 1:
-                    p2 = self.robot_config.Tx("EE", q=q)
+                if ii == self.robot_config.N_JOINTS[self.arm_num] - 1:
+                    p2 = self.robot_config.Tx(self.body_name, q=q)
                 else:
                     p2 = self.robot_config.Tx(f"joint{ii+1}", q=q)
 
@@ -106,7 +108,7 @@ class AvoidObstacles(Controller):
                     T_inv = self.robot_config.T_inv(f"link{ii+1}", q=q)
                     m = np.dot(T_inv, np.hstack([closest, [1]]))[:-1]
                     # calculate the Jacobian for this point
-                    Jpsp = self.robot_config.J(f"link{ii+1}", x=m, q=q)[:3]
+                    Jpsp = self.robot_config.J(f"link{ii+1}", x=m, q=q, arm_num=self.arm_num)[:3]
 
                     # calculate the inertia matrix for the
                     # point subjected to the potential space

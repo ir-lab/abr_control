@@ -63,6 +63,7 @@ class OSC(Controller):
         use_g=True,
         use_C=False,
         orientation_algorithm=0,
+        arm_num=0,
     ):
 
         super().__init__(robot_config)
@@ -77,6 +78,8 @@ class OSC(Controller):
         self.use_g = use_g
         self.use_C = use_C
         self.orientation_algorithm = orientation_algorithm
+        self.arm_num = arm_num
+        self.body_name = robot_config.arm[arm_num].ee
 
         if self.ki != 0:
             self.integrated_error = np.zeros(6)
@@ -90,7 +93,7 @@ class OSC(Controller):
         self.lamb = self.task_space_gains / self.kv
 
         try:
-            if self.n_ctrlr_dof > robot_config.N_JOINTS:
+            if self.n_ctrlr_dof > robot_config.N_JOINTS[self.arm_num]:
                 print(
                     f"\nRobot has fewer DOF ({robot_config.N_JOINTS}) "
                     + "than the specified number of "
@@ -115,7 +118,7 @@ class OSC(Controller):
             self.scale_abg = vmax[1] / self.ko * self.kv
 
         self.ZEROS_SIX = np.zeros(6)
-        self.IDENTITY_N_JOINTS = np.eye(self.robot_config.N_JOINTS)
+        self.IDENTITY_N_JOINTS = np.eye(self.robot_config.N_JOINTS[self.arm_num])
 
     def _Mx(self, M, J, threshold=1e-3):
         """Generate the task-space inertia matrix
@@ -167,7 +170,7 @@ class OSC(Controller):
                 )
             )
             # get the quaternion for the end effector
-            q_e = self.robot_config.quaternion("EE", q=q)
+            q_e = self.robot_config.quaternion(self.body_name, q=q)
             q_r = transformations.quaternion_multiply(
                 q_d, transformations.quaternion_conjugate(q_e)
             )
@@ -176,7 +179,7 @@ class OSC(Controller):
         elif self.orientation_algorithm == 1:
             # From (Caccavale et al, 1997) Section IV Quaternion feedback
             # get rotation matrix for the end effector orientation
-            R_e = self.robot_config.R("EE", q)
+            R_e = self.robot_config.R(self.body_name, q)
             # get rotation matrix for the target orientation
             R_d = transformations.euler_matrix(
                 target_abg[0], target_abg[1], target_abg[2], axes="rxyz"
@@ -215,7 +218,7 @@ class OSC(Controller):
         return self.kv * scale * self.lamb * u_task
 
     def generate(
-        self, q, dq, target, target_velocity=None, ref_frame="EE", xyz_offset=None
+        self, q, dq, target, target_velocity=None, ref_frame=None, xyz_offset=None
     ):
         """Generates the control signal to move the EE to a target
 
@@ -235,15 +238,17 @@ class OSC(Controller):
         xyz_offset: list, optional (Default: None)
             point of interest inside the frame of reference [meters]
         """
+        if ref_frame is None:
+            ref_frame = self.body_name
 
         if target_velocity is None:
             target_velocity = self.ZEROS_SIX
 
-        J = self.robot_config.J(ref_frame, q, x=xyz_offset)  # Jacobian
+        J = self.robot_config.J(ref_frame, q, x=xyz_offset,arm_num=self.arm_num)  # Jacobian
         # isolate rows of Jacobian corresponding to controlled task space DOF
         J = J[self.ctrlr_dof]
 
-        M = self.robot_config.M(q)  # inertia matrix in joint space
+        M = self.robot_config.M(q,arm_num=self.arm_num)  # inertia matrix in joint space
         Mx, M_inv = self._Mx(M=M, J=J)  # inertia matrix in task space
 
         # calculate the desired task space forces -----------------------------
@@ -263,7 +268,7 @@ class OSC(Controller):
             self.integrated_error += u_task
             u_task += self.ki * self.integrated_error
 
-        u = np.zeros(self.robot_config.N_JOINTS)
+        u = np.zeros(self.robot_config.N_JOINTS[self.arm_num])
         if self.vmax is not None:
             # if max task space velocities specified, apply velocity limiting
             u_task = self._velocity_limiting(u_task)
@@ -298,7 +303,7 @@ class OSC(Controller):
 
         # add in gravity term in joint space ----------------------------------
         if self.use_g:
-            u -= self.robot_config.g(q=q)
+            u -= self.robot_config.g(q=q,arm_num=self.arm_num)
 
             # add in gravity term in task space
             # Jbar = np.dot(M_inv, np.dot(J.T, Mx))

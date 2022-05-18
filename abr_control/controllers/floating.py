@@ -18,11 +18,13 @@ class Floating(Controller):
         gravity in task-space
     """
 
-    def __init__(self, robot_config, dynamic=False, task_space=False):
+    def __init__(self, robot_config, dynamic=False, task_space=False, arm_num=0):
         super().__init__(robot_config)
 
         self.dynamic = dynamic
         self.task_space = task_space
+        self.arm_num = arm_num
+        self.body_name = robot_config.arm[arm_num].ee
 
     def generate(self, q, dq=None):
         """Generates the control signal to compensate for gravity
@@ -34,14 +36,14 @@ class Floating(Controller):
             the current joint velocities [radians/second]
         """
         # calculate the effect of gravity in joint space
-        g = self.robot_config.g(q)
+        g = self.robot_config.g(q,arm_num=self.arm_num)
 
         if self.task_space:
             # get the Jacobian
-            J = self.robot_config.J("EE", q)[:3]
+            J = self.robot_config.J(self.body_name, q)[:3]
 
             # calculate the inertia matrix in joint space
-            M = self.robot_config.M(q)
+            M = self.robot_config.M(q,self.arm_num)
             # calculate the inertia matrix in task space
             M_inv = np.linalg.inv(M)
 
@@ -65,7 +67,7 @@ class Floating(Controller):
 
         if self.dynamic:
             # compensate for current velocity
-            M = self.robot_config.M(q) if M is None else M
+            M = self.robot_config.M(q,arm_num=self.arm_num) if M is None else M
             u -= np.dot(M, dq)
 
         return u

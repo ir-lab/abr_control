@@ -39,21 +39,23 @@ class AvoidJointLimits(Controller):
         max_torque=None,
         cross_zero=None,
         gradient=None,
+        arm_num=0
     ):
         super().__init__(robot_config)
 
         # shift limits to -pi to pi range
-        for ii in range(0, robot_config.N_JOINTS):
+        self.arm_num = arm_num
+        for ii in range(0, robot_config.N_JOINTS[self.arm_num]):
             if min_joint_angles[ii] is not None:
                 min_joint_angles[ii] = min_joint_angles[ii] - np.pi
             if max_joint_angles[ii] is not None:
                 max_joint_angles[ii] = max_joint_angles[ii] - np.pi
 
         if cross_zero is None:
-            cross_zero = [False] * robot_config.N_JOINTS
+            cross_zero = [False] * robot_config.N_JOINTS[self.arm_num]
         self.cross_zero = np.array(cross_zero)
         if gradient is None:
-            gradient = [False] * robot_config.N_JOINTS
+            gradient = [False] * robot_config.N_JOINTS[self.arm_num]
         self.gradient = np.array(gradient)
 
         self.min_joint_angles = np.asarray(min_joint_angles)
@@ -66,8 +68,8 @@ class AvoidJointLimits(Controller):
         self.min_joint_angles[cross_zero] = temp_max[cross_zero]
 
         if (
-            self.max_joint_angles.shape[0] != robot_config.N_JOINTS
-            or self.min_joint_angles.shape[0] != robot_config.N_JOINTS
+            self.max_joint_angles.shape[0] != robot_config.N_JOINTS[self.arm_num]
+            or self.min_joint_angles.shape[0] != robot_config.N_JOINTS[self.arm_num]
         ):
             raise Exception("joint angles vector incorrect size")
         # find where there aren't limits
@@ -75,7 +77,7 @@ class AvoidJointLimits(Controller):
         self.no_limits_max = np.isnan(self.max_joint_angles)
 
         self.max_torque = (
-            np.ones(robot_config.N_JOINTS)
+            np.ones(robot_config.N_JOINTS[self.arm_num])
             if max_torque is None
             else np.asarray(max_torque)
         )
@@ -99,8 +101,8 @@ class AvoidJointLimits(Controller):
         )
 
         # initialize arrays
-        avoid_min = np.zeros(self.robot_config.N_JOINTS)
-        avoid_max = np.zeros(self.robot_config.N_JOINTS)
+        avoid_min = np.zeros(self.robot_config.N_JOINTS[self.arm_num])
+        avoid_max = np.zeros(self.robot_config.N_JOINTS[self.arm_num])
 
         # get the minimum force between the exponential curve as q
         # approaches limit and max force if user wants a gradient

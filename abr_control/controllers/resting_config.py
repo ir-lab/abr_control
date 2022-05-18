@@ -16,6 +16,7 @@ class RestingConfig(Joint):
     """
 
     def __init__(self, robot_config, rest_angles, **kwargs):
+        
         super().__init__(robot_config, account_for_gravity=False, **kwargs)
 
         self.rest_angles = np.asarray(rest_angles)
