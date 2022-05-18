@@ -1,0 +1,21 @@
+<mujoco>
+    <compiler angle="radian" meshdir="../data/"/>
+    <option timestep="0.001" solver="Newton" impratio="10" tolerance="1e-10"/>
+
+    <size njmax="8000" nconmax="4000"/>
+
+    <custom>
+        <numeric name="START_ANGLES" data="-0.67 -0.45 -1.87 0.15 -1.57 -2.25" />
+    </custom>
+    
+    <include file="world.xml"/>
+
+    <include file="../data/dual_ur_stand/dual_ur_stand.xml"/>
+
+    <include file="../data/dual_ur_stand/dual_ur5_orig.xml"/>
+
+    <include file="../data/dual_pegs/grommet_11mm.xml"/>
+
+    <include file="../data/dual_pegs/dual_pegs.xml"/>
+
+</mujoco>
