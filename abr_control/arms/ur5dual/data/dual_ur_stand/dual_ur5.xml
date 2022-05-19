@@ -26,7 +26,7 @@
         <mesh name="link6_connector" file="ur5/link6_connector.stl" />
 
         <!-- gripper models -->
-        <!-- <mesh name="robotiq_arg2f_base_link" file="robotiq_85_gripper/robotiq_arg2f_base_link.stl" />
+        <mesh name="robotiq_arg2f_base_link" file="robotiq_85_gripper/robotiq_arg2f_base_link.stl" />
         <mesh name="robotiq_arg2f_85_outer_knuckle" file="robotiq_85_gripper/robotiq_arg2f_85_outer_knuckle.stl" scale="0.001 0.001 0.001" />
         <mesh name="robotiq_arg2f_85_outer_finger" file="robotiq_85_gripper/robotiq_arg2f_85_outer_finger.stl" scale="0.001 0.001 0.001" />
         <mesh name="robotiq_arg2f_85_inner_finger" file="robotiq_85_gripper/robotiq_arg2f_85_inner_finger.stl" scale="0.001 0.001 0.001" />
@@ -34,109 +34,123 @@
         <mesh name="robotiq_arg2f_85_outer_knuckle_vis" file="robotiq_85_gripper/robotiq_arg2f_85_outer_knuckle_vis.stl" scale="0.001 0.001 0.001" />
         <mesh name="robotiq_arg2f_85_outer_finger_vis" file="robotiq_85_gripper/robotiq_arg2f_85_outer_finger_vis.stl" scale="0.001 0.001 0.001" />
         <mesh name="robotiq_arg2f_85_inner_finger_vis" file="robotiq_85_gripper/robotiq_arg2f_85_inner_finger_vis.stl" scale="0.001 0.001 0.001" />
-        <mesh name="robotiq_arg2f_85_inner_knuckle_vis" file="robotiq_85_gripper/robotiq_arg2f_85_inner_knuckle_vis.stl" scale="0.001 0.001 0.001" /> -->
+        <mesh name="robotiq_arg2f_85_inner_knuckle_vis" file="robotiq_85_gripper/robotiq_arg2f_85_inner_knuckle_vis.stl" scale="0.001 0.001 0.001" />
     </asset>
 
     <worldbody>
-        <body name="hand_mra_id_1" pos="0 0 -0.15" mocap="true">
-            <geom type="box" size=".01 .01 .01" rgba="0 0 1 .5" contype="2" conaffinity="2"/>
-        </body>
-        <body name="hand_mra_id_2" pos="0 0 -0.15" mocap="true">
-            <geom type="box" size=".01 .01 .01" rgba="0 0 1 .5" contype="2" conaffinity="2"/>
-        </body>
-
         <!-- Left UR5 -->
-        <body name="base_link_mra_id_1" pos="0.15 0 0.447889" euler="0 0.785398 0">
-            <geom name="link0_mra_id_1" type="mesh" mesh="link0" pos="0 0 0"/>
+        <body name="base_link" pos="0.15 0 0.447889" euler="0 0.785398 0">
+            <geom name="link0" type="mesh" mesh="link0" pos="0 0 0"/>
 
-            <body name="link1_mra_id_1" pos="0 0 0.0213">
-                <joint name="joint0_mra_id_1" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+            <body name="link1" pos="0 0 0.0213" euler="0 0 3.14159">
+                <joint name="joint0" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319" />
                 <inertial pos="0 -0.02561 0.00193" mass="3.761" diaginertia="0.1 0.1 0.1"/>
-                <geom name="link1_connector_mra_id_1" type="mesh" mesh="link1_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                <geom name="link1_mra_id_1" type="mesh" mesh="link1" pos="0 0 0.008" material="grey"/>
-                <geom name="link1_cap_mra_id_1" type="mesh" mesh="link1_cap" pos="0 0 .1025" material="blue"/>
+                <geom name="link1_connector" type="mesh" mesh="link1_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                <geom name="link1" type="mesh" mesh="link1" pos="0 0 0.008" material="grey"/>
+                <geom name="link1_cap" type="mesh" mesh="link1_cap" pos="0 0 .1025" material="blue"/>
 
-                <body name="link2_mra_id_1" pos="-0.0663 0 0.0679" euler="-0.5 0 0">
-                    <joint name="joint1_mra_id_1" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                <body name="link2" pos="-0.0663 0 0.0679" euler="0.5 0 0">
+                    <joint name="joint1" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                     <inertial pos="-0.04706 0 0.2125" mass="8.058" diaginertia="0.1 0.1 0.1"/>
-                    <geom name="link2_connector_mra_id_1" type="mesh" mesh="link2_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                    <geom name="link2_mra_id_1" type="mesh" mesh="link2" pos="-0.008 0 0" material="grey"/>
-                    <geom name="link2_cap_mra_id_1" type="mesh" mesh="link2_cap" pos="-0.1015 0 -0.0025" material="blue"/>
-                    <geom name="link2_tube_mra_id_1" type="mesh" mesh="link2_tube" pos="-0.0679 0 0.066" material="silver"/>
+                    <geom name="link2_connector" type="mesh" mesh="link2_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                    <geom name="link2" type="mesh" mesh="link2" pos="-0.008 0 0" material="grey"/>
+                    <geom name="link2_cap" type="mesh" mesh="link2_cap" pos="-0.1015 0 -0.0025" material="blue"/>
+                    <geom name="link2_tube" type="mesh" mesh="link2_tube" pos="-0.0679 0 0.066" material="silver"/>
 
-                    <body name="link3_mra_id_1" pos="-0.008 0 0.425" euler="-2.2 0 0">
-                        <joint name="joint2_mra_id_1" axis="1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                    <body name="link3" pos="-0.008 0 0.425" euler="2.2 0 0">
+                        <joint name="joint2" axis="1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                         <inertial pos="0.0478 0 0.15" mass="2.846" diaginertia="0.1 0.1 0.1"/>
-                        <geom name="link3a_connector_mra_id_1" type="mesh" mesh="link3a_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                        <geom name="link3a_mra_id_1" type="mesh" mesh="link3a" pos="0.008 0 0" material="grey"/>
-                        <geom name="link3_tube_mra_id_1" type="mesh" mesh="link3_tube" pos="0.059 0 0.066" material="silver"/>
-                        <geom name="link3b_connector_mra_id_1" type="mesh" mesh="link3b_connector" pos="0.059 0 0.3418" material="black" />
-                        <geom name="link3b_connector2_mra_id_1" type="mesh" mesh="link3b_connector2" pos="0.059 0 0.34" material="grey" conaffinity="32" contype="32"/>
-                        <geom name="link3b_mra_id_1" type="mesh" mesh="link3b" pos="0.059 0 0.347" material="grey"/>
-                        <geom name="link3_cap_mra_id_1" type="mesh" mesh="link3_cap" pos="0.0837 0 0.392" material="blue"/>
+                        <geom name="link3a_connector" type="mesh" mesh="link3a_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                        <geom name="link3a" type="mesh" mesh="link3a" pos="0.008 0 0" material="grey"/>
+                        <geom name="link3_tube" type="mesh" mesh="link3_tube" pos="0.059 0 0.066" material="silver"/>
+                        <geom name="link3b_connector" type="mesh" mesh="link3b_connector" pos="0.059 0 0.3418" material="black" />
+                        <geom name="link3b_connector2" type="mesh" mesh="link3b_connector2" pos="0.059 0 0.34" material="grey" conaffinity="32" contype="32"/>
+                        <geom name="link3b" type="mesh" mesh="link3b" pos="0.059 0 0.347" material="grey"/>
+                        <geom name="link3_cap" type="mesh" mesh="link3_cap" pos="0.0837 0 0.392" material="blue"/>
 
-                        <body name="link4_mra_id_1" pos="0.0173 0 0.3922" euler="1.1 0 0">
-                            <joint name="joint3_mra_id_1" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                        <body name="link4" pos="0.0173 0 0.3922" euler="-1.1 0 0">
+                            <joint name="joint3" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                             <inertial pos="-0.05796 -0.0018 0" mass="1.37" diaginertia="0.1 0.1 0.1"/>
-                            <geom name="link4_connector_mra_id_1" type="mesh" mesh="link4_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                            <geom name="link4_mra_id_1" type="mesh" mesh="link4" pos="-0.008 0 0" material="grey"/>
-                            <geom name="link4_cap_mra_id_1" type="mesh" mesh="link4_cap" pos="-0.05325 0 -0.0247" material="blue"/>
+                            <geom name="link4_connector" type="mesh" mesh="link4_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                            <geom name="link4" type="mesh" mesh="link4" pos="-0.008 0 0" material="grey"/>
+                            <geom name="link4_cap" type="mesh" mesh="link4_cap" pos="-0.05325 0 -0.0247" material="blue"/>
 
-                            <body name="link5_mra_id_1" pos="-0.05325 0 0.04165" euler="0 0 -0.8">
-                                <joint name="joint4_mra_id_1" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                            <body name="link5" pos="-0.05325 0 0.04165" euler="0 0 0.8">
+                                <joint name="joint4" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                                 <inertial pos="0.0018 0 0.01634" mass="1.3" diaginertia="0.1 0.1 0.1"/>
-                                <geom name="link5_connector_mra_id_1" type="mesh" mesh="link5_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                                <geom name="link5_mra_id_1" type="mesh" mesh="link5" pos="0 0 0.0079" material="grey"/>
-                                <geom name="link5_cap_mra_id_1" type="mesh" mesh="link5_cap" pos="0.025 0 0.053" material="blue"/>
+                                <geom name="link5_connector" type="mesh" mesh="link5_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                                <geom name="link5" type="mesh" mesh="link5" pos="0 0 0.0079" material="grey"/>
+                                <geom name="link5_cap" type="mesh" mesh="link5_cap" pos="0.025 0 0.053" material="blue"/>
 
-                                <body name="link6_mra_id_1" pos="-0.04165 0 0.05305">
-                                    <joint name="joint5_mra_id_1" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                                <body name="link6" pos="-0.04165 0 0.05305">
+                                    <joint name="joint5" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                                     <inertial pos="-0.038841 0 0" mass="0.365" diaginertia="0.1 0.1 0.1"/>
-                                    <geom name="link6_connector_mra_id_1" type="mesh" mesh="link6_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                                    <geom name="link6_mra_id_1" type="mesh" mesh="link6" pos="-0.008 0 0" material="silver"/>
+                                    <geom name="link6_connector" type="mesh" mesh="link6_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                                    <geom name="link6" type="mesh" mesh="link6" pos="-0.008 0 0" material="silver"/>
 
-                                    <body name="ur_EE_mra_id_1" pos="-0.04 0 0" euler="0 0 0">
-                                    <body name="EE_mra_id_1" pos="-0.04 0 0" euler="0 0 0">
-                                        <body name="robotiq_85_adapter_link_mra_id_1" pos="0.0 0 0" quat="-0.707105 0 0.707105 0">
-                                            <site name="ft_frame_mra_id_1" pos="0 0 0" size="0.01 0.01 0.01" rgba="1 0 0 1" type="sphere" group="1" />
-                                            <body name="EE_mra_id_1" pos="0 0 0.145" quat="0.707105 0 0 -0.707105">
+                                    <body name="ur_EE" pos="-0.04 0 0" euler="0 0 0">
+                                        <body name="robotiq_85_adapter_link" pos="0.0 0 0" quat="-0.707105 0 0.707105 0">
+                                            <site name="ft_frame" pos="0 0 0" size="0.01 0.01 0.01" rgba="1 0 0 1" type="sphere" group="1" />
+                                            <!-- This site was added for visualization. -->
+                                            <body name="EE" pos="0 0 0.145" quat="0.707105 0 0 -0.707105">
+                                                <!-- <site name="grip_site" pos="0 0 0" size="0.01 0.01 0.01" rgba="1 0 0 0.5" type="sphere" group="1"/> -->
+                                                <!-- <site name="ee_x" pos="0.1 0 0" size="0.005 .1" quat="0.707105  0 0.707108 0 " rgba="1 0 0 0" type="cylinder" group="1"/> -->
+                                                <!-- <site name="ee_y" pos="0 0.1 0" size="0.005 .1" quat="0.707105 0.707108 0 0" rgba="0 1 0 0" type="cylinder" group="1"/> -->
+                                                <!-- <site name="ee_z" pos="0 0 0.1" size="0.005 .1" quat="1 0 0 0" rgba="0 0 1 0" type="cylinder" group="1"/> -->
+                                                <!-- This site was added for visualization. -->
+                                                <!-- <site name="grip_site_cylinder" pos="0 0 0" size="0.005 10" rgba="0 1 0 0.3" type="cylinder" group="1"/> -->
                                             </body>
                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001" />
-                                            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="hand_visual_mra_id_1" mesh="robotiq_arg2f_base_link" />
-                                            <body name="left_outer_knuckle_mra_id_1" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
+                                            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="hand_visual" mesh="robotiq_arg2f_base_link" />
+                                            <!-- <geom type="mesh" group="0" rgba="0.1 0.1 0.1 1" mesh="robotiq_arg2f_base_link" name="hand_collision" /> -->
+                                            <body name="left_outer_knuckle" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
                                                 <inertial pos="0.000163875 0.0554825 -0.0100755" quat="0.920541 0.390623 -0.00362953 0.00231744" mass="0.0311462" diaginertia="5.11372e-05 4.89464e-05 4.95906e-06" />
-                                                <joint name="left_outer_knuckle_joint_mra_id_1" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="left_outer_knuckle_visual_mra_id_1" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
-                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_outer_finger_visual_mra_id_1" mesh="robotiq_arg2f_85_outer_finger_vis" />
-                                                <body name="left_inner_finger_mra_id_1" pos="0 0.0376 0.043">
+                                                <joint name="left_outer_knuckle_joint" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="left_outer_knuckle_visual" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
+                                                <!-- <geom type="mesh" group="0" rgba="0.792157 0.819608 0.933333 1" mesh="robotiq_arg2f_85_outer_knuckle" name="left_outer_knuckle_collision" solref="0.01 0.25" /> -->
+                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_outer_finger_visual" mesh="robotiq_arg2f_85_outer_finger_vis" />
+                                                <!-- <geom pos="0 0.0315 -0.0041" type="mesh" group="0" rgba="0.1 0.1 0.1 1" mesh="robotiq_arg2f_85_outer_finger" name="left_outer_finger_collision" solref="0.01 0.25" /> -->
+                                                <body name="left_inner_finger" pos="0 0.0376 0.043">
                                                     <inertial pos="0.000199506 0.0032692 0.00175282" quat="0.933621 0.35825 -0.00273441 0.00104851" mass="0.0156391" diaginertia="1.57977e-05 1.51089e-05 1.4647e-06" />
-                                                    <joint name="left_inner_finger_joint_mra_id_1" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
-                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_finger_visual_mra_id_1" mesh="robotiq_arg2f_85_inner_finger_vis" />
-                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="left_fingertip_visual_mra_id_1" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
+                                                    <joint name="left_inner_finger_joint" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
+                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_finger_visual" mesh="robotiq_arg2f_85_inner_finger_vis" />
+                                                    <!-- <geom type="mesh" group="0" rgba="0.1 0.1 0.1 1" mesh="robotiq_arg2f_85_inner_finger" name="left_inner_finger_collision" solref="0.01 0.25" /> -->
+                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="left_fingertip_visual" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
+                                                    <!-- <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" group="0" rgba="0.9 0.9 0.9 1" name="left_fingertip_collision" solref="0.01 0.25" /> -->
+                                                    <!-- <geom size="0.010 0.001 0.01675" pos="0 -0.0245203 0.03242" type="box" group="0" name="left_fingerpad_collision" /> -->
+                                                    <!-- <site name="left_finger_site" pos="0 -0.0175 0.005" size="0.01 0.01 0.01" rgba="1 0 0 0.5" type="sphere" group="1"/> -->
                                                 </body>
                                             </body>
-                                            <body name="left_inner_knuckle_mra_id_1" pos="0 -0.0127 0.06142" quat="0 0 0 1">
+                                            <body name="left_inner_knuckle" pos="0 -0.0127 0.06142" quat="0 0 0 1">
                                                 <inertial pos="0.000123012 0.0507851 0.00103969" quat="0.497203 0.502496 -0.507943 0.492221" mass="0.0271177" diaginertia="2.83809e-05 2.61936e-05 2.81319e-06" />
-                                                <joint name="left_inner_knuckle_joint_mra_id_1" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_knuckle_visual_mra_id_1" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
+                                                <joint name="left_inner_knuckle_joint" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_knuckle_visual" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
+                                                <!-- <geom type="mesh" group="0" rgba="0.1 0.1 0.1 1" mesh="robotiq_arg2f_85_inner_knuckle" name="left_inner_knuckle_collision" /> -->
+                                                <!-- <site name="left_tendor_site" pos="0 0.0375 0.045" size="0.01 0.01 0.01" rgba="0 1 0 0.5" type="sphere" group="1"/> -->
                                             </body>
 
-                                            <body name="right_outer_knuckle_mra_id_1" pos="0 0.0306011 0.054904">
+                                            <body name="right_outer_knuckle" pos="0 0.0306011 0.054904">
                                                 <inertial pos="0.000163875 0.0554825 -0.0100755" quat="0.920541 0.390623 -0.00362953 0.00231744" mass="0.0311462" diaginertia="5.11372e-05 4.89464e-05 4.95906e-06" />
-                                                <joint name="right_outer_knuckle_joint_mra_id_1" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="right_outer_knuckle_visual_mra_id_1" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
-                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_outer_finger_visual_mra_id_1" mesh="robotiq_arg2f_85_outer_finger_vis" />
-                                                <body name="right_inner_finger_mra_id_1" pos="0 0.0376 0.043">
+                                                <joint name="right_outer_knuckle_joint" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="right_outer_knuckle_visual" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
+                                                <!-- <geom type="mesh" group="0" rgba="0.792157 0.819608 0.933333 1" mesh="robotiq_arg2f_85_outer_knuckle" name="right_outer_knuckle_collision" solref="0.01 0.25" /> -->
+                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_outer_finger_visual" mesh="robotiq_arg2f_85_outer_finger_vis" />
+                                                <!-- <geom pos="0 0.0315 -0.0041" type="mesh" group="0" rgba="0.1 0.1 0.1 1" mesh="robotiq_arg2f_85_outer_finger" name="right_outer_finger_collision" solref="0.01 0.25" /> -->
+                                                <body name="right_inner_finger" pos="0 0.0376 0.043">
                                                     <inertial pos="0.000199506 0.0032692 0.00175282" quat="0.933621 0.35825 -0.00273441 0.00104851" mass="0.0156391" diaginertia="1.57977e-05 1.51089e-05 1.4647e-06" />
-                                                    <joint name="right_inner_finger_joint_mra_id_1" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
-                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_finger_visual_mra_id_1" mesh="robotiq_arg2f_85_inner_finger_vis" />
-                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="right_fingertip_visual_mra_id_1" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
+                                                    <joint name="right_inner_finger_joint" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
+                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_finger_visual" mesh="robotiq_arg2f_85_inner_finger_vis" />
+                                                    <!-- <geom type="mesh" group="0" rgba="0.1 0.1 0.1 1" mesh="robotiq_arg2f_85_inner_finger" name="right_inner_finger_collision" solref="0.01 0.25" /> -->
+                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="right_fingertip_visual" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
+                                                    <!-- <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" group="0" rgba="0.9 0.9 0.9 1" name="right_fingertip_collision" solref="0.01 0.25" /> -->
+                                                    <!-- <geom size="0.010 0.001 0.01675" pos="0 -0.0245203 0.03242" type="box" group="0" name="right_fingerpad_collision" /> -->
                                                 </body>
                                             </body>
-                                            <body name="right_inner_knuckle_mra_id_1" pos="0 0.0127 0.06142">
+                                            <body name="right_inner_knuckle" pos="0 0.0127 0.06142">
                                                 <inertial pos="0.000123012 0.0507851 0.00103969" quat="0.497203 0.502496 -0.507943 0.492221" mass="0.0271177" diaginertia="2.83809e-05 2.61936e-05 2.81319e-06" />
-                                                <joint name="right_inner_knuckle_joint_mra_id_1" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_knuckle_visual_mra_id_1" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
+                                                <joint name="right_inner_knuckle_joint" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_knuckle_visual" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
+                                                <!-- <geom type="mesh" group="0" rgba="0.1 0.1 0.1 1" mesh="robotiq_arg2f_85_inner_knuckle" name="right_inner_knuckle_collision" /> -->
                                             </body>
                                         </body>
                                     </body>
@@ -149,99 +163,98 @@
         </body>
 
         <!-- Right UR5 -->
-        <body name="base_link_mra_id_2" pos="-0.15 0 0.447889" euler="0 -0.785398 0">
-            <geom name="link0_mra_id_2" type="mesh" mesh="link0" pos="0 0 0"/>
+        <body name="base_link_right" pos="-0.15 0 0.447889" euler="0 -0.785398 0">
+            <geom name="link0_right" type="mesh" mesh="link0" pos="0 0 0"/>
 
-            <body name="link1_mra_id_2" pos="0 0 0.0213">
-                <joint name="joint0_mra_id_2" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+            <body name="link1_right" pos="0 0 0.0213">
+                <joint name="joint0_right" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                 <inertial pos="0 -0.02561 0.00193" mass="3.761" diaginertia="0.1 0.1 0.1"/>
-                <geom name="link1_connector_mra_id_2" type="mesh" mesh="link1_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                <geom name="link1_mra_id_2" type="mesh" mesh="link1" pos="0 0 0.008" material="grey"/>
-                <geom name="link1_cap_mra_id_2" type="mesh" mesh="link1_cap" pos="0 0 .1025" material="blue"/>
+                <geom name="link1_connector_right" type="mesh" mesh="link1_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                <geom name="link1_right" type="mesh" mesh="link1" pos="0 0 0.008" material="grey"/>
+                <geom name="link1_cap_right" type="mesh" mesh="link1_cap" pos="0 0 .1025" material="blue"/>
 
-                <body name="link2_mra_id_2" pos="-0.0663 0 0.0679" euler="-0.5 0 0">
-                    <joint name="joint1_mra_id_2" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                <body name="link2_right" pos="-0.0663 0 0.0679" euler="-0.5 0 0">
+                    <joint name="joint1_right" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                     <inertial pos="-0.04706 0 0.2125" mass="8.058" diaginertia="0.1 0.1 0.1"/>
-                    <geom name="link2_connector_mra_id_2" type="mesh" mesh="link2_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                    <geom name="link2_mra_id_2" type="mesh" mesh="link2" pos="-0.008 0 0" material="grey"/>
-                    <geom name="link2_cap_mra_id_2" type="mesh" mesh="link2_cap" pos="-0.1015 0 -0.0025" material="blue"/>
-                    <geom name="link2_tube_mra_id_2" type="mesh" mesh="link2_tube" pos="-0.0679 0 0.066" material="silver"/>
+                    <geom name="link2_connector_right" type="mesh" mesh="link2_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                    <geom name="link2_right" type="mesh" mesh="link2" pos="-0.008 0 0" material="grey"/>
+                    <geom name="link2_cap_right" type="mesh" mesh="link2_cap" pos="-0.1015 0 -0.0025" material="blue"/>
+                    <geom name="link2_tube_right" type="mesh" mesh="link2_tube" pos="-0.0679 0 0.066" material="silver"/>
 
-                    <body name="link3_mra_id_2" pos="-0.008 0 0.425" euler="-2.2 0 0">
-                        <joint name="joint2_mra_id_2" axis="1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                    <body name="link3_right" pos="-0.008 0 0.425" euler="-2.2 0 0">
+                        <joint name="joint2_right" axis="1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                         <inertial pos="0.0478 0 0.15" mass="2.846" diaginertia="0.1 0.1 0.1"/>
-                        <geom name="link3a_connector_mra_id_2" type="mesh" mesh="link3a_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                        <geom name="link3a_mra_id_2" type="mesh" mesh="link3a" pos="0.008 0 0" material="grey"/>
-                        <geom name="link3_tube_mra_id_2" type="mesh" mesh="link3_tube" pos="0.059 0 0.066" material="silver"/>
-                        <geom name="link3b_connector_mra_id_2" type="mesh" mesh="link3b_connector" pos="0.059 0 0.3418" material="black" />
-                        <geom name="link3b_connector2_mra_id_2" type="mesh" mesh="link3b_connector2" pos="0.059 0 0.34" material="grey" conaffinity="32" contype="32"/>
-                        <geom name="link3b_mra_id_2" type="mesh" mesh="link3b" pos="0.059 0 0.347" material="grey"/>
-                        <geom name="link3_cap_mra_id_2" type="mesh" mesh="link3_cap" pos="0.0837 0 0.392" material="blue"/>
+                        <geom name="link3a_connector_right" type="mesh" mesh="link3a_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                        <geom name="link3a_right" type="mesh" mesh="link3a" pos="0.008 0 0" material="grey"/>
+                        <geom name="link3_tube_right" type="mesh" mesh="link3_tube" pos="0.059 0 0.066" material="silver"/>
+                        <geom name="link3b_connector_right" type="mesh" mesh="link3b_connector" pos="0.059 0 0.3418" material="black" />
+                        <geom name="link3b_connector2_right" type="mesh" mesh="link3b_connector2" pos="0.059 0 0.34" material="grey" conaffinity="32" contype="32"/>
+                        <geom name="link3b_right" type="mesh" mesh="link3b" pos="0.059 0 0.347" material="grey"/>
+                        <geom name="link3_cap_right" type="mesh" mesh="link3_cap" pos="0.0837 0 0.392" material="blue"/>
 
-                        <body name="link4_mra_id_2" pos="0.0173 0 0.3922" euler="1.1 0 0">
-                            <joint name="joint3_mra_id_2" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                        <body name="link4_right" pos="0.0173 0 0.3922" euler="1.1 0 0">
+                            <joint name="joint3_right" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                             <inertial pos="-0.05796 -0.0018 0" mass="1.37" diaginertia="0.1 0.1 0.1"/>
-                            <geom name="link4_connector_mra_id_2" type="mesh" mesh="link4_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                            <geom name="link4_mra_id_2" type="mesh" mesh="link4" pos="-0.008 0 0" material="grey"/>
-                            <geom name="link4_cap_mra_id_2" type="mesh" mesh="link4_cap" pos="-0.05325 0 -0.0247" material="blue"/>
+                            <geom name="link4_connector_right" type="mesh" mesh="link4_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                            <geom name="link4_right" type="mesh" mesh="link4" pos="-0.008 0 0" material="grey"/>
+                            <geom name="link4_cap_right" type="mesh" mesh="link4_cap" pos="-0.05325 0 -0.0247" material="blue"/>
 
-                            <body name="link5_mra_id_2" pos="-0.05325 0 0.04165" euler="0 0 -0.8">
-                                <joint name="joint4_mra_id_2" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                            <body name="link5_right" pos="-0.05325 0 0.04165" euler="0 0 -0.8">
+                                <joint name="joint4_right" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                                 <inertial pos="0.0018 0 0.01634" mass="1.3" diaginertia="0.1 0.1 0.1"/>
-                                <geom name="link5_connector_mra_id_2" type="mesh" mesh="link5_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                                <geom name="link5_mra_id_2" type="mesh" mesh="link5" pos="0 0 0.0079" material="grey"/>
-                                <geom name="link5_cap_mra_id_2" type="mesh" mesh="link5_cap" pos="0.025 0 0.053" material="blue"/>
+                                <geom name="link5_connector_right" type="mesh" mesh="link5_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                                <geom name="link5_right" type="mesh" mesh="link5" pos="0 0 0.0079" material="grey"/>
+                                <geom name="link5_cap_right" type="mesh" mesh="link5_cap" pos="0.025 0 0.053" material="blue"/>
 
-                                <body name="link6_mra_id_2" pos="-0.04165 0 0.05305">
-                                    <joint name="joint5_mra_id_2" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
+                                <body name="link6_right" pos="-0.04165 0 0.05305">
+                                    <joint name="joint5_right" axis="-1 0 0" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                                     <inertial pos="-0.038841 0 0" mass="0.365" diaginertia="0.1 0.1 0.1"/>
-                                    <geom name="link6_connector_mra_id_2" type="mesh" mesh="link6_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
-                                    <geom name="link6_mra_id_2" type="mesh" mesh="link6" pos="-0.008 0 0" material="silver"/>
+                                    <geom name="link6_connector_right" type="mesh" mesh="link6_connector" pos="0 0 0" material="black" conaffinity="32" contype="32"/>
+                                    <geom name="link6_right" type="mesh" mesh="link6" pos="-0.008 0 0" material="silver"/>
 
-                                    <!-- <body name="ur_EE_mra_id_2" pos="-0.04 0 0" euler="0 0 0"> -->
-                                    <body name="EE_mra_id_2" pos="-0.04 0 0" euler="0 0 0">
-                                        <!-- <body name="robotiq_85_adapter_link_mra_id_2" pos="0.0 0 0" quat="-0.707105 0 0.707105 0">
-                                            <site name="ft_frame_mra_id_2" pos="0 0 0" size="0.01 0.01 0.01" rgba="1 0 0 1" type="sphere" group="1" />
-                                            <body name="EE_mra_id_2" pos="0 0 0.145" quat="0.707105 0 0 -0.707105">
+                                    <body name="ur_EE_right" pos="-0.04 0 0" euler="0 0 0">
+                                        <body name="robotiq_85_adapter_link_right" pos="0.0 0 0" quat="-0.707105 0 0.707105 0">
+                                            <site name="ft_frame_right" pos="0 0 0" size="0.01 0.01 0.01" rgba="1 0 0 1" type="sphere" group="1" />
+                                            <body name="EE_right" pos="0 0 0.145" quat="0.707105 0 0 -0.707105">
                                             </body>
                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001" />
-                                            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="hand_visual_mra_id_2" mesh="robotiq_arg2f_base_link" />
-                                            <body name="left_outer_knuckle_mra_id_2" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
+                                            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="hand_visual_right" mesh="robotiq_arg2f_base_link" />
+                                            <body name="left_outer_knuckle_right" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
                                                 <inertial pos="0.000163875 0.0554825 -0.0100755" quat="0.920541 0.390623 -0.00362953 0.00231744" mass="0.0311462" diaginertia="5.11372e-05 4.89464e-05 4.95906e-06" />
-                                                <joint name="left_outer_knuckle_joint_mra_id_2" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="left_outer_knuckle_visual_mra_id_2" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
-                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_outer_finger_visual_mra_id_2" mesh="robotiq_arg2f_85_outer_finger_vis" />
-                                                <body name="left_inner_finger_mra_id_2" pos="0 0.0376 0.043">
+                                                <joint name="left_outer_knuckle_joint_right" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="left_outer_knuckle_visual_right" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
+                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_outer_finger_visual_right" mesh="robotiq_arg2f_85_outer_finger_vis" />
+                                                <body name="left_inner_finger_right" pos="0 0.0376 0.043">
                                                     <inertial pos="0.000199506 0.0032692 0.00175282" quat="0.933621 0.35825 -0.00273441 0.00104851" mass="0.0156391" diaginertia="1.57977e-05 1.51089e-05 1.4647e-06" />
-                                                    <joint name="left_inner_finger_joint_mra_id_2" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
-                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_finger_visual_mra_id_2" mesh="robotiq_arg2f_85_inner_finger_vis" />
-                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="left_fingertip_visual_mra_id_2" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
+                                                    <joint name="left_inner_finger_joint_right" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
+                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_finger_visual_right" mesh="robotiq_arg2f_85_inner_finger_vis" />
+                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="left_fingertip_visual_right" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
                                                 </body>
                                             </body>
-                                            <body name="left_inner_knuckle_mra_id_2" pos="0 -0.0127 0.06142" quat="0 0 0 1">
+                                            <body name="left_inner_knuckle_right" pos="0 -0.0127 0.06142" quat="0 0 0 1">
                                                 <inertial pos="0.000123012 0.0507851 0.00103969" quat="0.497203 0.502496 -0.507943 0.492221" mass="0.0271177" diaginertia="2.83809e-05 2.61936e-05 2.81319e-06" />
-                                                <joint name="left_inner_knuckle_joint_mra_id_2" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_knuckle_visual_mra_id_2" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
+                                                <joint name="left_inner_knuckle_joint_right" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="left_inner_knuckle_visual_right" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
                                             </body>
 
-                                            <body name="right_outer_knuckle_mra_id_2" pos="0 0.0306011 0.054904">
+                                            <body name="right_outer_knuckle_right" pos="0 0.0306011 0.054904">
                                                 <inertial pos="0.000163875 0.0554825 -0.0100755" quat="0.920541 0.390623 -0.00362953 0.00231744" mass="0.0311462" diaginertia="5.11372e-05 4.89464e-05 4.95906e-06" />
-                                                <joint name="right_outer_knuckle_joint_mra_id_2" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="right_outer_knuckle_visual_mra_id_2" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
-                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_outer_finger_visual_mra_id_2" mesh="robotiq_arg2f_85_outer_finger_vis" />
-                                                <body name="right_inner_finger_mra_id_2" pos="0 0.0376 0.043">
+                                                <joint name="right_outer_knuckle_joint_right" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" name="right_outer_knuckle_visual_right" mesh="robotiq_arg2f_85_outer_knuckle_vis" />
+                                                <geom pos="0 0.0315 -0.0041" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_outer_finger_visual_right" mesh="robotiq_arg2f_85_outer_finger_vis" />
+                                                <body name="right_inner_finger_right" pos="0 0.0376 0.043">
                                                     <inertial pos="0.000199506 0.0032692 0.00175282" quat="0.933621 0.35825 -0.00273441 0.00104851" mass="0.0156391" diaginertia="1.57977e-05 1.51089e-05 1.4647e-06" />
-                                                    <joint name="right_inner_finger_joint_mra_id_2" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
-                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_finger_visual_mra_id_2" mesh="robotiq_arg2f_85_inner_finger_vis" />
-                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="right_fingertip_visual_mra_id_2" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
+                                                    <joint name="right_inner_finger_joint_right" pos="0 0 0" axis="1 0 0" limited="true" range="-0.8757 0.8757" />
+                                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_finger_visual_right" mesh="robotiq_arg2f_85_inner_finger_vis" />
+                                                    <geom size="0.011 0.003175 0.01875" pos="0 -0.0220203 0.03242" type="box" contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1" name="right_fingertip_visual_right" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.8 0.8 10"/>
                                                 </body>
                                             </body>
-                                            <body name="right_inner_knuckle_mra_id_2" pos="0 0.0127 0.06142">
+                                            <body name="right_inner_knuckle_right" pos="0 0.0127 0.06142">
                                                 <inertial pos="0.000123012 0.0507851 0.00103969" quat="0.497203 0.502496 -0.507943 0.492221" mass="0.0271177" diaginertia="2.83809e-05 2.61936e-05 2.81319e-06" />
-                                                <joint name="right_inner_knuckle_joint_mra_id_2" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
-                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_knuckle_visual_mra_id_2" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
+                                                <joint name="right_inner_knuckle_joint_right" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.8757" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.1 0.1 0.1 1" name="right_inner_knuckle_visual_right" mesh="robotiq_arg2f_85_inner_knuckle_vis" />
                                             </body>
-                                        </body> -->
+                                        </body>
                                     </body>
                                 </body>
                             </body>
@@ -253,51 +266,51 @@
     </worldbody>
 
     <actuator>
-        <motor name="joint0_motor_mra_id_1" joint="joint0_mra_id_1"/>
-        <motor name="joint1_motor_mra_id_1" joint="joint1_mra_id_1"/>
-        <motor name="joint2_motor_mra_id_1" joint="joint2_mra_id_1"/>
-        <motor name="joint3_motor_mra_id_1" joint="joint3_mra_id_1"/>
-        <motor name="joint4_motor_mra_id_1" joint="joint4_mra_id_1"/>
-        <motor name="joint5_motor_mra_id_1" joint="joint5_mra_id_1"/>
+        <motor name="joint0_motor" joint="joint0"/>
+        <motor name="joint1_motor" joint="joint1"/>
+        <motor name="joint2_motor" joint="joint2"/>
+        <motor name="joint3_motor" joint="joint3"/>
+        <motor name="joint4_motor" joint="joint4"/>
+        <motor name="joint5_motor" joint="joint5"/>
 
-        <!-- <motor name="gripper_mra_id_1" joint='right_outer_knuckle_joint_mra_id_1' /> -->
+        <motor name='gripper' joint='right_outer_knuckle_joint' />
 
-        <motor name="joint0_motor_mra_id_2" joint="joint0_mra_id_2"/>
-        <motor name="joint1_motor_mra_id_2" joint="joint1_mra_id_2"/>
-        <motor name="joint2_motor_mra_id_2" joint="joint2_mra_id_2"/>
-        <motor name="joint3_motor_mra_id_2" joint="joint3_mra_id_2"/>
-        <motor name="joint4_motor_mra_id_2" joint="joint4_mra_id_2"/>
-        <motor name="joint5_motor_mra_id_2" joint="joint5_mra_id_2"/>
+        <motor name="joint0_motor_right" joint="joint0_right"/>
+        <motor name="joint1_motor_right" joint="joint1_right"/>
+        <motor name="joint2_motor_right" joint="joint2_right"/>
+        <motor name="joint3_motor_right" joint="joint3_right"/>
+        <motor name="joint4_motor_right" joint="joint4_right"/>
+        <motor name="joint5_motor_right" joint="joint5_right"/>
 
-        <!-- <motor name="gripper_mra_id_2" joint='right_outer_knuckle_joint_mra_id_2' /> -->
+        <motor name="gripper_right" joint='right_outer_knuckle_joint_right' />
     </actuator>
 
-    <!-- <sensor>
-        <force name="force_ee_mra_id_1" site="ft_frame_mra_id_1"/>
-        <torque name="torque_ee_mra_id_1" site="ft_frame_mra_id_1"/>
+    <sensor>
+        <force name="force_ee" site="ft_frame"/>
+        <torque name="torque_ee" site="ft_frame"/>
 
-        <force name="force_ee_mra_id_2" site="ft_frame_mra_id_2"/>
-        <torque name="torque_ee_mra_id_2" site="ft_frame_mra_id_2"/>
-    </sensor> -->
+        <force name="force_ee_right" site="ft_frame_right"/>
+        <torque name="torque_ee_right" site="ft_frame_right"/>
+    </sensor>
 
-    <!-- <equality> -->
+    <equality>
         <!-- Right finger control -->
-        <!-- <joint joint1="right_outer_knuckle_joint_mra_id_1" joint2="right_inner_finger_joint_mra_id_1" polycoef="0 -1.1 0 0 0" /> -->
-        <!-- <joint joint1="right_outer_knuckle_joint_mra_id_1" joint2="right_inner_knuckle_joint_mra_id_1" polycoef="0 1 0 0 0" /> -->
+		<joint joint1="right_outer_knuckle_joint" joint2="right_inner_finger_joint" polycoef="0 -1.1 0 0 0" />
+        <joint joint1="right_outer_knuckle_joint" joint2="right_inner_knuckle_joint" polycoef="0 1 0 0 0" />
         <!-- Left finger control -->
-        <!-- <joint joint1="left_outer_knuckle_joint_mra_id_1" joint2="left_inner_finger_joint_mra_id_1" polycoef="0 -1.1 0 0 0" /> -->
-        <!-- <joint joint1="left_outer_knuckle_joint_mra_id_1" joint2="left_inner_knuckle_joint_mra_id_1" polycoef="0 1 0 0 0" /> -->
+        <joint joint1="left_outer_knuckle_joint" joint2="left_inner_finger_joint" polycoef="0 -1.1 0 0 0" />
+        <joint joint1="left_outer_knuckle_joint" joint2="left_inner_knuckle_joint" polycoef="0 1 0 0 0" />
         <!-- Make the fingers mirrors -->
-        <!-- <joint joint1="right_outer_knuckle_joint_mra_id_1" joint2="left_outer_knuckle_joint_mra_id_1" polycoef="0 1 0 0 0" /> -->
+        <joint joint1="right_outer_knuckle_joint" joint2="left_outer_knuckle_joint" polycoef="0 1 0 0 0" />
 
 
-        <!-- Right finger control -->
-        <!-- <joint joint1="right_outer_knuckle_joint_mra_id_2" joint2="right_inner_finger_joint_mra_id_2" polycoef="0 -1.1 0 0 0" /> -->
-        <!-- <joint joint1="right_outer_knuckle_joint_mra_id_2" joint2="right_inner_knuckle_joint_mra_id_2" polycoef="0 1 0 0 0" /> -->
+         <!-- Right finger control -->
+		<joint joint1="right_outer_knuckle_joint_right" joint2="right_inner_finger_joint_right" polycoef="0 -1.1 0 0 0" />
+        <joint joint1="right_outer_knuckle_joint_right" joint2="right_inner_knuckle_joint_right" polycoef="0 1 0 0 0" />
         <!-- Left finger control -->
-        <!-- <joint joint1="left_outer_knuckle_joint_mra_id_2" joint2="left_inner_finger_joint_mra_id_2" polycoef="0 -1.1 0 0 0" /> -->
-        <!-- <joint joint1="left_outer_knuckle_joint_mra_id_2" joint2="left_inner_knuckle_joint_mra_id_2" polycoef="0 1 0 0 0" /> -->
+        <joint joint1="left_outer_knuckle_joint_right" joint2="left_inner_finger_joint_right" polycoef="0 -1.1 0 0 0" />
+        <joint joint1="left_outer_knuckle_joint_right" joint2="left_inner_knuckle_joint_right" polycoef="0 1 0 0 0" />
         <!-- Make the fingers mirrors -->
-        <!-- <joint joint1="right_outer_knuckle_joint_mra_id_2" joint2="left_outer_knuckle_joint_mra_id_2" polycoef="0 1 0 0 0" /> -->
-	<!-- </equality> -->
+        <joint joint1="right_outer_knuckle_joint_right" joint2="left_outer_knuckle_joint_right" polycoef="0 1 0 0 0" />
+	</equality>
 </mujocoimport>

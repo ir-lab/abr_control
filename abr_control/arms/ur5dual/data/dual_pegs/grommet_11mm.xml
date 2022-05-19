@@ -40,7 +40,7 @@
     <worldbody>
         <body name="grommet_11mm" pos="0.2 0.325 0.0" quat="1.0 0 0 0">
         <!-- <body name="grommet_16mm" pos="0.2 0.475 0.0" quat="1.0 0 0 0"> -->
-            <!-- <freejoint name="free_joint_grommet_11mm"/> -->
+            <freejoint name="free_joint_grommet_11mm"/>
             <!-- <inertial pos="0 0 0" mass="0.1" diaginertia="0.005 0.005 0.005"/> -->
             <geom name="grommet_11mm_handle" type="mesh" mesh="grommet_11mm_handle" pos="0 0 0" material="silver" conaffinity="1" contype="1" mass="0.025" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" friction="0.9 0.9 10"/>
             <body name="handle_11mm_flap_a" pos="0 0 0.005" quat="0 0 0.707108 0">
