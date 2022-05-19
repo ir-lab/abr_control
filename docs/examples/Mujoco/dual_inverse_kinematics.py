@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 18 00:02:31 2022
-
-@author: raviswarooprayavarapu
-"""
-
 """
 Running the joint controller with an inverse kinematics path planner
 for a Mujoco simulation. The path planning system will generate
@@ -25,7 +17,7 @@ import mujoco_py as mjp
 import csv
 
 # initialize our robot config for the Dual arm
-file = "Google Dual UR/environments/google_dual_ur.xml"
+file = "../../../abr_control/arms/ur5dual/environments/google_dual_ur.xml"
 robot_config = MujocoConfig(xml_file=file,folder='.',use_sim_state=False)
 
 # create our interface

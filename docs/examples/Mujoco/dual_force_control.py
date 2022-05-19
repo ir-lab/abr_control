@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue May 10 16:32:56 2022
-
-@author: raviswarooprayavarapu
-"""
-
 """
 Move the jao2 Mujoco arm to a target position.
 The simulation ends after 1500 time steps, and the
@@ -23,7 +15,7 @@ from abr_control.interfaces.mujoco import Mujoco
 from abr_control.utils import transformations
 
 
-file = "Google Dual UR/environments/google_dual_ur.xml"
+file = "../../../abr_control/arms/ur5dual/environments/google_dual_ur.xml"
 robot_config = MujocoConfig(xml_file=file,folder='.')
 
 # create our Mujoco interface
