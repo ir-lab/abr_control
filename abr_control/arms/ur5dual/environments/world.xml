@@ -29,7 +29,11 @@
         <body name="target" pos="0 0 -0.15" mocap="true">
             <geom name="target" type="sphere" size="0.05" rgba=".9 0 0 .5" contype="4" conaffinity="4"/>
         </body>
-
+        
+        <body name="target1" pos="0 0 -0.15" mocap="true">
+            <geom name="target1" type="sphere" size="0.05" rgba="0 0 0.9 .5" contype="4" conaffinity="4"/>
+        </body>
+        
         <body name="target_orientation1" pos="0 0 -0.15" mocap="true">
             <geom type="box" size=".02 .04 .06" rgba=".9 0 0 .5" contype="8" conaffinity="8"/>
         </body>
