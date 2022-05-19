@@ -1,29 +1,29 @@
 <mujocoimport>
     <asset>
         <!-- arm models -->
-        <mesh name="link0" file="ur5/link0.stl"/>
-        <mesh name="link1" file="ur5/link1.stl"/>
-        <mesh name="link1_cap" file="ur5/link1_cap.stl" />
-        <mesh name="link1_connector" file="ur5/link1_connector.stl" />
-        <mesh name="link2" file="ur5/link2.stl" />
-        <mesh name="link2_tube" file="ur5/link2_tube.stl" />
-        <mesh name="link2_cap" file="ur5/link2_cap.stl" />
-        <mesh name="link2_connector" file="ur5/link2_connector.stl" />
-        <mesh name="link3a" file="ur5/link3a.stl" />
-        <mesh name="link3a_connector" file="ur5/link3a_connector.stl" />
-        <mesh name="link3_tube" file="ur5/link3_tube.stl" />
-        <mesh name="link3_cap" file="ur5/link3_cap.stl" />
-        <mesh name="link3b" file="ur5/link3b.stl" />
-        <mesh name="link3b_connector" file="ur5/link3b_connector.stl" />
-        <mesh name="link3b_connector2" file="ur5/link3b_connector2.stl"/>
-        <mesh name="link4" file="ur5/link4.stl" />
-        <mesh name="link4_cap" file="ur5/link4_cap.stl" />
-        <mesh name="link4_connector" file="ur5/link4_connector.stl" />
-        <mesh name="link5" file="ur5/link5.stl" />
-        <mesh name="link5_cap" file="ur5/link5_cap.stl" />
-        <mesh name="link5_connector" file="ur5/link5_connector.stl" />
-        <mesh name="link6" file="ur5/link6.stl" />
-        <mesh name="link6_connector" file="ur5/link6_connector.stl" />
+        <mesh name="link0" file="../../ur5/meshes/link0.stl"/>
+        <mesh name="link1" file="../../ur5/meshes/link1.stl"/>
+        <mesh name="link1_cap" file="../../ur5/meshes/link1_cap.stl" />
+        <mesh name="link1_connector" file="../../ur5/meshes/link1_connector.stl" />
+        <mesh name="link2" file="../../ur5/meshes/link2.stl" />
+        <mesh name="link2_tube" file="../../ur5/meshes/link2_tube.stl" />
+        <mesh name="link2_cap" file="../../ur5/meshes/link2_cap.stl" />
+        <mesh name="link2_connector" file="../../ur5/meshes/link2_connector.stl" />
+        <mesh name="link3a" file="../../ur5/meshes/link3a.stl" />
+        <mesh name="link3a_connector" file="../../ur5/meshes/link3a_connector.stl" />
+        <mesh name="link3_tube" file="../../ur5/meshes/link3_tube.stl" />
+        <mesh name="link3_cap" file="../../ur5/meshes/link3_cap.stl" />
+        <mesh name="link3b" file="../../ur5/meshes/link3b.stl" />
+        <mesh name="link3b_connector" file="../../ur5/meshes/link3b_connector.stl" />
+        <mesh name="link3b_connector2" file="../../ur5/meshes/link3b_connector2.stl"/>
+        <mesh name="link4" file="../../ur5/meshes/link4.stl" />
+        <mesh name="link4_cap" file="../../ur5/meshes/link4_cap.stl" />
+        <mesh name="link4_connector" file="../../ur5/meshes/link4_connector.stl" />
+        <mesh name="link5" file="../../ur5/meshes/link5.stl" />
+        <mesh name="link5_cap" file="../../ur5/meshes/link5_cap.stl" />
+        <mesh name="link5_connector" file="../../ur5/meshes/link5_connector.stl" />
+        <mesh name="link6" file="../../ur5/meshes/link6.stl" />
+        <mesh name="link6_connector" file="../../ur5/meshes/link6_connector.stl" />
 
         <!-- gripper models -->
         <mesh name="robotiq_arg2f_base_link" file="robotiq_85_gripper/robotiq_arg2f_base_link.stl" />
