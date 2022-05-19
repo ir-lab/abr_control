@@ -23,7 +23,7 @@ n_targets = 100
 if len(sys.argv) > 1:
     arm_model = sys.argv[1]
 else:
-    arm_model = "jaco2"
+    arm_model = "ur5"
 # initialize our robot config for the jaco2
 robot_config = arm(arm_model)
 
@@ -94,9 +94,9 @@ try:
             feedback = interface.get_feedback()
             hand_xyz = robot_config.Tx("EE", feedback["q"])
 
-            if interface.viewer.exit:
-                glfw.destroy_window(interface.viewer.window)
-                break
+            # if interface.viewer.exit:
+            #     glfw.destroy_window(interface.viewer.window)
+            #     break
 
             u = ctrlr.generate(
                 q=feedback["q"],

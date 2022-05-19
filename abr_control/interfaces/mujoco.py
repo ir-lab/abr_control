@@ -69,14 +69,10 @@ class Mujoco(Interface):
             joint_ids.append([])
             joint_ids[0], joint_names[0] = self.get_joints_in_ee_kinematic_tree()
         else:
-            
-            joint_names = np.asmatrix(joint_names)
-            joint_names = joint_names.tolist()
-
+            joint_names = np.array(joint_names)
             for i in range(len(joint_names)):
                 joint_ids.append([])
                 joint_ids[i] = [model.joint_name2id(name) for name in joint_names[i]]
-      
 
         self.arm = [arms.arms(self.robot_config,self.sim,joint_names[i],joint_ids[i]) for i in range(len(joint_ids))]
         self.robot_config._connect(self.sim,self.arm)
