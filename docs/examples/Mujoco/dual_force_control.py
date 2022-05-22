@@ -20,8 +20,8 @@ robot_config = MujocoConfig(xml_file=file,folder='.')
 
 # create our Mujoco interface
 interface = Mujoco(robot_config, dt=0.001)
-joint_names = [["joint0","joint1","joint2","joint3","joint4","joint5"],
-               ["joint0_right","joint1_right","joint2_right","joint3_right","joint4_right","joint5_right"]]
+joint_names = [["joint0_mra_id_1","joint1_mra_id_1","joint2_mra_id_1","joint3_mra_id_1","joint4_mra_id_1","joint5_mra_id_1"],
+               ["joint0_mra_id_2","joint1_mra_id_2","joint2_mra_id_2","joint3_mra_id_2","joint4_mra_id_2","joint5_mra_id_2"]]
 interface.connect(joint_names)
 
 # damp the movements of the arm
@@ -127,8 +127,8 @@ try:
         interface.send_forces(u_right,arm_num=1)
 
         # calculate end-effector position
-        ee_xyz_left = robot_config.Tx("EE", q=feedback_left["q"])
-        ee_xyz_right = robot_config.Tx("EE_right",q=feedback_right["q"])
+        ee_xyz_left = robot_config.Tx("EE_mra_id_1", q=feedback_left["q"])
+        ee_xyz_right = robot_config.Tx("EE_mra_id_2",q=feedback_right["q"])
         
         # track error
         error_left = np.linalg.norm(ee_xyz_left - target_left[:3])

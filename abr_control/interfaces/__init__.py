@@ -1,1 +1,1 @@
-from .coppeliasim import CoppeliaSim
+#from .coppeliasim import CoppeliaSim

@@ -23,8 +23,8 @@ robot_config = MujocoConfig(xml_file=file,folder='.',use_sim_state=False)
 # create our interface
 dt = 0.001
 interface = Mujoco(robot_config, dt=dt)
-joint_names = [["joint0","joint1","joint2","joint3","joint4","joint5"],
-               ["joint0_right","joint1_right","joint2_right","joint3_right","joint4_right","joint5_right"]]
+joint_names = [["joint0_mra_id_1","joint1_mra_id_1","joint2_mra_id_1","joint3_mra_id_1","joint4_mra_id_1","joint5_mra_id_1"],
+                ["joint0_mra_id_2","joint1_mra_id_2","joint2_mra_id_2","joint3_mra_id_2","joint4_mra_id_2","joint5_mra_id_2"]]
 arm_0 = 0
 arm_1 = 1 
 interface.connect(joint_names)
@@ -44,12 +44,12 @@ try:
             feedback_1 = interface.get_feedback(arm_num=arm_1)
             target_xyz_1 = np.array(
                 [
-                    np.random.random() * -0.5 - 0.2,
-                    np.random.random() * -0.5 - 0.2,
+                    np.random.random() * 0.5 - 0.2,
+                    np.random.random() * 0.5 - 0.5,
                     np.random.random() * 0.5 + 0.25,
                 ]
             )
-            R_1 = robot_config.R("EE_right", q=feedback_1["q"])
+            R_1 = robot_config.R("EE_mra_id_2", q=feedback_1["q"])
             target_orientation_1 = transformations.euler_from_matrix(R_1, "sxyz")
             
             feedback_0 = interface.get_feedback(arm_num=arm_0)
@@ -60,7 +60,7 @@ try:
                     np.random.random() * 0.5 + 0.25,
                 ]
             )
-            R_0 = robot_config.R("EE", q=feedback_0["q"])
+            R_0 = robot_config.R("EE_mra_id_1", q=feedback_0["q"])
             target_orientation_0 = transformations.euler_from_matrix(R_0, "sxyz")
             
             # update the position of the target
