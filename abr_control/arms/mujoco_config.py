@@ -66,6 +66,12 @@ class MujocoConfig:
             if name == "START_ANGLES":
                 START_ANGLES = custom.get("data").split(" ")
                 self.START_ANGLES = np.array([float(angle) for angle in START_ANGLES])
+            elif name == "START_ANGLES_RIGHT":
+                START_ANGLES_RIGHT = custom.get("data").split(" ")
+                self.START_ANGLES_RIGHT = np.array([float(angle) for angle in START_ANGLES_RIGHT])
+            elif name == "START_ANGLES_LEFT":
+                START_ANGLES_LEFT = custom.get("data").split(" ")
+                self.START_ANGLES_LEFT = np.array([float(angle) for angle in START_ANGLES_LEFT])
             elif name == "N_GRIPPER_JOINTS":
                 self.N_GRIPPER_JOINTS = int(custom.get("data"))
 

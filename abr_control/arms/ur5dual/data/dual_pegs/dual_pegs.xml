@@ -8,7 +8,7 @@
     </asset>
 
     <worldbody>
-        <body name="dual_peg" pos="-0.2 0.4 0.0">
+        <body name="dual_peg" pos="-0.2 -0.4 0.0">
             <inertial pos="0 0 0" mass="1.0" diaginertia="0.1 0.1 0.1"/>
             <geom name="dual_peg_base" type="mesh" mesh="dual_peg_base" pos="0 0 0" material="black" conaffinity="1" contype="2"/>
             <geom name="dual_peg_pin_a" type="mesh" mesh="dual_peg_pin_a" pos="0 0 0" material="black" conaffinity="1" contype="2"/>

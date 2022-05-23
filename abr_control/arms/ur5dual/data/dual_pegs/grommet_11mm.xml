@@ -38,7 +38,7 @@
     </asset>
 
     <worldbody>
-        <body name="grommet_11mm" pos="0.2 0.325 0.0" quat="1.0 0 0 0">
+        <body name="grommet_11mm" pos="0.2 -0.325 0.0" quat="1.0 0 0 0">
         <!-- <body name="grommet_16mm" pos="0.2 0.475 0.0" quat="1.0 0 0 0"> -->
             <freejoint name="free_joint_grommet_11mm"/>
             <!-- <inertial pos="0 0 0" mass="0.1" diaginertia="0.005 0.005 0.005"/> -->

@@ -26,12 +26,12 @@
             <geom type="box" size=".01 .01 .01" rgba="0 0 1 .5" contype="2" conaffinity="2"/>
         </body>
 
-        <body name="target" pos="0 0 -0.15" mocap="true">
-            <geom name="target" type="sphere" size="0.05" rgba=".9 0 0 .5" contype="4" conaffinity="4"/>
+        <body name="target_red" pos="0 0 -0.15" mocap="true">
+            <geom name="target_red" type="sphere" size="0.05" rgba=".9 0 0 .5" contype="4" conaffinity="4"/>
         </body>
         
-        <body name="target1" pos="0 0 -0.15" mocap="true">
-            <geom name="target1" type="sphere" size="0.05" rgba="0 0 0.9 .5" contype="4" conaffinity="4"/>
+        <body name="target_blue" pos="0 0 -0.15" mocap="true">
+            <geom name="target_blue" type="sphere" size="0.05" rgba="0 0 0.9 .5" contype="4" conaffinity="4"/>
         </body>
 
         <body name="target_orientation1" pos="0 0 -0.15" mocap="true">

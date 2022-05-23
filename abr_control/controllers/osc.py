@@ -280,18 +280,11 @@ class OSC(Controller):
         if np.all(target_velocity == 0):
             # if there's no target velocity in task space,
             # compensate for velocity in joint space (more accurate)
-            if self.arm_num == 2:
-                u = -1 * self.kv * np.dot(M, [dq[2]])
-            else:
-                u = -1 * self.kv * np.dot(M, dq)
+            u = -1 * self.kv * np.dot(M, dq)
         else:
             dx = np.zeros(6)
-            if self.arm_num == 2:
-                dx[self.ctrlr_dof] = np.dot(J, [dq[2]])
-                u_task += self.kv * (dx - target_velocity)
-            else:
-                dx[self.ctrlr_dof] = np.dot(J, dq)
-                u_task += self.kv * (dx - target_velocity)
+            dx[self.ctrlr_dof] = np.dot(J, dq)
+            u_task += self.kv * (dx - target_velocity)
 
         # isolate task space forces corresponding to controlled DOF
         u_task = u_task[self.ctrlr_dof]
@@ -319,17 +312,14 @@ class OSC(Controller):
             # g_task = np.dot(Jbar.T, g)
 
         # add in secondary control signals ------------------------------------
-        # if self.null_controllers is not None:
-        #     for null_controller in self.null_controllers:
-        #         # generate control signal to apply in null space
-        #         if self.arm_num == 2:
-        #             u_null = null_controller.generate(q, dq)
-        #         else:
-        #             u_null = null_controller.generate(q, dq)
-        #         # calculate null space filter
-        #         Jbar = np.dot(M_inv, np.dot(J.T, Mx))
-        #         null_filter = self.IDENTITY_N_JOINTS - np.dot(J.T, Jbar.T)
-        #         # add in filtered null space control signal
-        #         u += np.dot(null_filter, u_null)
+        if self.null_controllers is not None:
+            for null_controller in self.null_controllers:
+                # generate control signal to apply in null space
+                u_null = null_controller.generate(q, dq)
+                # calculate null space filter
+                Jbar = np.dot(M_inv, np.dot(J.T, Mx))
+                null_filter = self.IDENTITY_N_JOINTS - np.dot(J.T, Jbar.T)
+                # add in filtered null space control signal
+                u += np.dot(null_filter, u_null)
 
         return u
