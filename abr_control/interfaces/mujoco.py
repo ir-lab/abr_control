@@ -70,8 +70,8 @@ class Mujoco(Interface):
             joint_ids[0], joint_names[0] = self.get_joints_in_ee_kinematic_tree()
         else:
             
-            joint_names = np.asmatrix(joint_names)
-            joint_names = joint_names.tolist()
+            #joint_names = np.asmatrix(joint_names)
+            #joint_names = joint_names.tolist()
 
             for i in range(len(joint_names)):
                 joint_ids.append([])
