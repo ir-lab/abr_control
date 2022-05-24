@@ -288,6 +288,7 @@ class OSC(Controller):
 
         # isolate task space forces corresponding to controlled DOF
         u_task = u_task[self.ctrlr_dof]
+
         # transform task space control signal into joint space ----------------
         u -= np.dot(J.T, np.dot(Mx, u_task))
 
@@ -320,4 +321,5 @@ class OSC(Controller):
                 null_filter = self.IDENTITY_N_JOINTS - np.dot(J.T, Jbar.T)
                 # add in filtered null space control signal
                 u += np.dot(null_filter, u_null)
+
         return u
