@@ -3,9 +3,11 @@ import numpy as np
 from abr_control.utils import transformations
 
 from .controller import Controller
+import pdb
+import mujoco_py as mjp
+from scipy.linalg import block_diag
 
-
-class OSC(Controller):
+class OSC2(Controller):
     """Implements an operational space controller (OSC). Based on
     [Khatib, Oussama. "A unified approach for motion and force control of robot
     manipulators: The operational space formulation." IEEE Journal on Robotics and
@@ -58,12 +60,11 @@ class OSC(Controller):
         kv=None,
         ki=0,
         vmax=None,
-        ctrlr_dof=None,
+        ctrlr_dofs=None,
         null_controllers=None,
         use_g=True,
         use_C=False,
         orientation_algorithm=0,
-        arm_num=0,
     ):
 
         super().__init__(robot_config)
@@ -78,37 +79,14 @@ class OSC(Controller):
         self.use_g = use_g
         self.use_C = use_C
         self.orientation_algorithm = orientation_algorithm
-        self.arm_num = arm_num
-        self.body_name = robot_config.arm[arm_num].ee
-
+        self.ctrlr_dofs = ctrlr_dofs
+        
         if self.ki != 0:
             self.integrated_error = np.zeros(6)
-
-        if ctrlr_dof is None:
-            ctrlr_dof = [True, True, True, False, False, False]
-        self.ctrlr_dof = np.copy(ctrlr_dof)
-        self.n_ctrlr_dof = np.sum(self.ctrlr_dof)
-
+        
         self.task_space_gains = np.array([self.kp] * 3 + [self.ko] * 3)
         self.lamb = self.task_space_gains / self.kv
 
-        try:
-            if self.n_ctrlr_dof > robot_config.N_JOINTS[self.arm_num]:
-                print(
-                    f"\nRobot has fewer DOF ({robot_config.N_JOINTS}) "
-                    + "than the specified number of "
-                    + f"space dimensions to control ({self.n_ctrlr_dof}), "
-                    + "Poor performance may result.\n"
-                )
-        except AttributeError as e:
-            print(
-                "\n********************************************************\n"
-                + "If using Mujoco you will need to instantiate and connect\n"
-                + "to the interface to gain access to parameters required\n"
-                + "for this controller\n"
-            )
-            print(e)
-            print("********************************************************\n")
         self.vmax = vmax
         if vmax is not None:
             # precalculate gains used in velocity limiting
@@ -116,9 +94,34 @@ class OSC(Controller):
             self.sat_gain_abg = vmax[1] / self.ko * self.kv
             self.scale_xyz = vmax[0] / self.kp * self.kv
             self.scale_abg = vmax[1] / self.ko * self.kv
+        
+        self.body_names = dict() 
+        self.n_ctrlr_dof = dict()
+        for arm_num in ctrlr_dofs.keys():
+            self.body_names[arm_num] = robot_config.arm[arm_num].ee
+            self.n_ctrlr_dof[arm_num] = np.sum(self.ctrlr_dofs[arm_num])
+
+            try:
+                if self.n_ctrlr_dof[arm_num] > robot_config.N_JOINTS[arm_num]:
+                    print(
+                        f"\nRobot has fewer DOF ({robot_config.N_JOINTS[arm_num]}) "
+                        + "than the specified number of "
+                        + f"space dimensions to control ({self.n_ctrlr_dof[arm_num]}), "
+                        + "Poor performance may result.\n"
+                    )
+            except AttributeError as e:
+                print(
+                    "\n********************************************************\n"
+                    + "If using Mujoco you will need to instantiate and connect\n"
+                    + "to the interface to gain access to parameters required\n"
+                    + "for this controller\n"
+                )
+                print(e)
+                print("********************************************************\n")
+        
 
         self.ZEROS_SIX = np.zeros(6)
-        self.IDENTITY_N_JOINTS = np.eye(self.robot_config.N_JOINTS[self.arm_num])
+        self.IDENTITY_N_JOINTS = np.eye(self.robot_config.N_JOINTS[0])
 
     def _Mx(self, M, J, threshold=1e-3):
         """Generate the task-space inertia matrix
@@ -149,7 +152,7 @@ class OSC(Controller):
 
         return Mx, M_inv
 
-    def _calc_orientation_forces(self, target_abg, q):
+    def _calc_orientation_forces(self, target_abg, q, arm_num=0):
         """Calculate the desired Euler angle forces to apply to the arm to
         move the end-effector to the target orientation
 
@@ -170,7 +173,7 @@ class OSC(Controller):
                 )
             )
             # get the quaternion for the end effector
-            q_e = self.robot_config.quaternion(self.body_name, q=q)
+            q_e = self.robot_config.quaternion(self.body_names[arm_num], q=q)
             q_r = transformations.quaternion_multiply(
                 q_d, transformations.quaternion_conjugate(q_e)
             )
@@ -179,7 +182,7 @@ class OSC(Controller):
         elif self.orientation_algorithm == 1:
             # From (Caccavale et al, 1997) Section IV Quaternion feedback
             # get rotation matrix for the end effector orientation
-            R_e = self.robot_config.R(self.body_name, q)
+            R_e = self.robot_config.R(self.body_names[arm_num], q)
             # get rotation matrix for the target orientation
             R_d = transformations.euler_matrix(
                 target_abg[0], target_abg[1], target_abg[2], axes="rxyz"
@@ -218,7 +221,7 @@ class OSC(Controller):
         return self.kv * scale * self.lamb * u_task
 
     def generate(
-        self, q, dq, target, target_velocity=None, ref_frame=None, xyz_offset=None
+        self, feedback, targets, target_vels, ref_frames=None, xyz_offset=None
     ):
         """Generates the control signal to move the EE to a target
 
@@ -238,86 +241,124 @@ class OSC(Controller):
         xyz_offset: list, optional (Default: None)
             point of interest inside the frame of reference [meters]
         """
-        if ref_frame is None:
-            ref_frame = self.body_name
+        Js = []
+        Ms = []
+        for idx in range(3):
+            if ref_frames[idx] is None:
+                ref_frame = self.body_names[idx]
+            else:
+                ref_frame = ref_frames[idx]
+            
+            J = self.robot_config.J(ref_frame, q=feedback[idx]["q"], x=xyz_offset, arm_num=idx)  # Jacobian
+            # isolate rows of Jacobian corresponding to controlled task space DOF
+            J = J[self.ctrlr_dofs[idx]]
+            
+            Js.append(J)
 
-        if target_velocity is None:
-            target_velocity = self.ZEROS_SIX
+            M = self.robot_config.M(q=feedback[idx]["q"],arm_num=idx)  # inertia matrix in joint space
+            Ms.append(M)
 
-        J = self.robot_config.J(ref_frame, q, x=xyz_offset,arm_num=self.arm_num)  # Jacobian
-        # isolate rows of Jacobian corresponding to controlled task space DOF
-        J = J[self.ctrlr_dof]
-
-        M = self.robot_config.M(q,arm_num=self.arm_num)  # inertia matrix in joint space
+        M = block_diag(*Ms)
+        J = np.hstack(Js)
         Mx, M_inv = self._Mx(M=M, J=J)  # inertia matrix in task space
-
         # calculate the desired task space forces -----------------------------
-        u_task = np.zeros(6)
 
-        # if position is being controlled
-        if np.sum(self.ctrlr_dof[:3]) > 0:
-            xyz = self.robot_config.Tx(ref_frame, q, x=xyz_offset)
-            u_task[:3] = xyz - target[:3]
+        num_all_joints = sum([self.robot_config.N_JOINTS[idx] for idx in range(3)])
+        
+        us = []
+        
+        start_idx = 0
+        for idx in range(3):
+            if ref_frames[idx] is None:
+                ref_frame = self.body_names[idx]
+            else:
+                ref_frame = ref_frames[idx]
+            end_idx = start_idx + self.robot_config.N_JOINTS[idx]
 
-        # if orientation is being controlled
-        if np.sum(self.ctrlr_dof[3:]) > 0:
-            u_task[3:] = self._calc_orientation_forces(target[3:], q)
+            u_task = np.zeros(6)
+            u = np.zeros(self.robot_config.N_JOINTS[idx])
 
-        # task space integrated error term
-        if self.ki != 0:
-            self.integrated_error += u_task
-            u_task += self.ki * self.integrated_error
+            # if position is being controlled
+            if np.sum(self.ctrlr_dofs[idx][:3]) > 0:
+                xyz = self.robot_config.Tx(ref_frame, q=feedback[idx]["q"], x=xyz_offset)
+                u_task[:3] = xyz - targets[idx][:3]
 
-        u = np.zeros(self.robot_config.N_JOINTS[self.arm_num])
-        if self.vmax is not None:
-            # if max task space velocities specified, apply velocity limiting
-            u_task = self._velocity_limiting(u_task)
-        else:
-            # otherwise apply specified gains
-            u_task *= self.task_space_gains
+            # if orientation is being controlled
+            if np.sum(self.ctrlr_dofs[idx][3:]) > 0:
+                u_task[3:] = self._calc_orientation_forces(targets[idx][3:], q=feedback[idx]["q"], arm_num=idx)
 
-        # compensate for velocity
-        if np.all(target_velocity == 0):
-            # if there's no target velocity in task space,
-            # compensate for velocity in joint space (more accurate)
-            u = -1 * self.kv * np.dot(M, dq)
-        else:
-            dx = np.zeros(6)
-            dx[self.ctrlr_dof] = np.dot(J, dq)
-            u_task += self.kv * (dx - target_velocity)
+            # task space integrated error term
+            if self.ki != 0:
+                self.integrated_error += u_task
+                u_task += self.ki * self.integrated_error
 
-        # isolate task space forces corresponding to controlled DOF
-        u_task = u_task[self.ctrlr_dof]
-        # transform task space control signal into joint space ----------------
-        u -= np.dot(J.T, np.dot(Mx, u_task))
+            if self.vmax is not None:
+                # if max task space velocities specified, apply velocity limiting
+                u_task = self._velocity_limiting(u_task)
+            else:
+                # otherwise apply specified gains
+                u_task *= self.task_space_gains
+        
+            # uts = [u_tasks[i][self.ctrlr_dofs[i]] for i in range(3)]
+            # compensate for velocity
+            if target_vels[idx] is None:
+                target_velocity = self.ZEROS_SIX
+            else:
+                target_velocity = target_vels[idx]
+            
+            
+            if np.all(target_velocity == 0):
+                # if there's no target velocity in task space,
+                # compensate for velocity in joint space (more accurate)
+                dqvec = np.zeros(num_all_joints)
+                dqvec[start_idx:end_idx] = feedback[idx]["dq"]
+                u = -1 * self.kv * np.dot(M, dqvec)[start_idx:end_idx]
+            else:
+                dx = np.zeros(6)
+                dqvec = np.zeros(num_all_joints)
+                dqvec[start_idx:end_idx] = feedback[idx]["dq"]
+                dx[self.ctrlr_dofs[idx]] = np.dot(J, dqvec)
+                u_task += self.kv * (dx - target_velocity)
+        
+            u_task = u_task[self.ctrlr_dofs[idx]]
+            # isolate task space forces corresponding to controlled DOF
+            # u_task = u_task[self.ctrlr_dofs[idx]]
+            # transform task space control signal into joint space ----------------
+            u -= np.dot(J.T, np.dot(Mx, u_task))[start_idx:end_idx]
+            # add in estimation of full centrifugal and Coriolis effects ----------
+            if self.use_C:
+                u -= np.dot(self.robot_config.C(q=q, dq=dq), dq)
 
-        # add in estimation of full centrifugal and Coriolis effects ----------
-        if self.use_C:
-            u -= np.dot(self.robot_config.C(q=q, dq=dq), dq)
+            # store the current control signal u for training in case
+            # dynamics adaptation signal is being used
+            # NOTE: do not include gravity or null controller in training signal
+            self.training_signal = np.copy(u)
 
-        # store the current control signal u for training in case
-        # dynamics adaptation signal is being used
-        # NOTE: do not include gravity or null controller in training signal
-        self.training_signal = np.copy(u)
+            # add in gravity term in joint space ----------------------------------
+            if self.use_g:
+                gval = self.robot_config.g(q=feedback[idx]["q"], arm_num=idx)
+                u -= gval
 
-        # add in gravity term in joint space ----------------------------------
-        if self.use_g:
-            u -= self.robot_config.g(q=q,arm_num=self.arm_num)
+                # add in gravity term in task space
+                # Jbar = np.dot(M_inv, np.dot(J.T, Mx))
+                # g = self.robot_config.g(q=q)
+                # self.u_g = g
+                # g_task = np.dot(Jbar.T, g)
 
-            # add in gravity term in task space
-            # Jbar = np.dot(M_inv, np.dot(J.T, Mx))
-            # g = self.robot_config.g(q=q)
-            # self.u_g = g
-            # g_task = np.dot(Jbar.T, g)
+            # add in secondary control signals ------------------------------------
+            if self.null_controllers is not None and idx != 2:
+                for null_controller in self.null_controllers:
+                    # generate control signal to apply in null space
+                    u_null = null_controller.generate(q=feedback[idx]["q"], dq=feedback[idx]["dq"])
+                    u_null_all = np.zeros(num_all_joints)
+                    u_null_all[start_idx:end_idx] = u_null
+                    # calculate null space filter
+                    Jbar = np.dot(M_inv, np.dot(J.T, Mx))
+                    # null_filter = self.IDENTITY_N_JOINTS - np.dot(J.T, Jbar.T)
+                    null_filter = np.eye(num_all_joints) - np.dot(J.T, Jbar.T)
+                    # add in filtered null space control signal
+                    u += np.dot(null_filter, u_null_all)[start_idx:end_idx]
+            us.append(u)
+            start_idx = end_idx
 
-        # add in secondary control signals ------------------------------------
-        if self.null_controllers is not None:
-            for null_controller in self.null_controllers:
-                # generate control signal to apply in null space
-                u_null = null_controller.generate(q, dq)
-                # calculate null space filter
-                Jbar = np.dot(M_inv, np.dot(J.T, Mx))
-                null_filter = self.IDENTITY_N_JOINTS - np.dot(J.T, Jbar.T)
-                # add in filtered null space control signal
-                u += np.dot(null_filter, u_null)
-        return u
+        return us

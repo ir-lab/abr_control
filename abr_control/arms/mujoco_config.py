@@ -5,7 +5,7 @@ import mujoco_py as mjp
 import numpy as np
 
 from abr_control.utils import download_meshes
-
+from scipy.linalg import block_diag
 
 class MujocoConfig:
     """A wrapper on the Mujoco simulator to generate all the kinematics and
@@ -57,21 +57,22 @@ class MujocoConfig:
             self.xml_file = os.path.join(self.xml_dir, xml_file)
 
         self.N_GRIPPEPR_JOINTS = 0
+        self.START_ANGLES_ALL = dict()
 
         # get access to some of our custom arm parameters from the xml definition
         tree = ElementTree.parse(self.xml_file)
         root = tree.getroot()
+        
+        idx = 0
         for custom in root.findall("custom/numeric"):
             name = custom.get("name")
             if name == "START_ANGLES":
                 START_ANGLES = custom.get("data").split(" ")
                 self.START_ANGLES = np.array([float(angle) for angle in START_ANGLES])
-            elif name == "START_ANGLES_RIGHT":
-                START_ANGLES_RIGHT = custom.get("data").split(" ")
-                self.START_ANGLES_RIGHT = np.array([float(angle) for angle in START_ANGLES_RIGHT])
-            elif name == "START_ANGLES_LEFT":
-                START_ANGLES_LEFT = custom.get("data").split(" ")
-                self.START_ANGLES_LEFT = np.array([float(angle) for angle in START_ANGLES_LEFT])
+            elif name == "START_ANGLES_" + str(idx):
+                start_angles = custom.get("data").split(" ")
+                self.START_ANGLES_ALL[idx] = np.array([float(angle) for angle in start_angles])
+                idx += 1
             elif name == "N_GRIPPER_JOINTS":
                 self.N_GRIPPER_JOINTS = int(custom.get("data"))
 
@@ -128,7 +129,7 @@ class MujocoConfig:
         self.sim = sim
         self.arm = arm
         num_arms = len(self.arm)
-        
+        self.num_arms = num_arms
         # a place to store data returned from Mujoco
         N_ALL_JOINTS = self.sim.model.nv
         self.jac_indices= []
@@ -309,7 +310,12 @@ class MujocoConfig:
         """
         if not self.use_sim_state and q is not None:
             old_q, old_dq, old_u = self._load_state(q)
-
+        
+        indices = np.array([], dtype=np.int32)
+        for i in range(3):
+            indices = np.hstack((indices, self.M_indices[i]))
+        
+        # n_joints = sum([self.N_JOINTS[i] for i in range(3)])
         # stored in mjData.qM, stored in custom sparse format,
         # convert qM to a dense matrix with mj_fullM
         mjp.cymj._mj_fullM(self.model, self._MNN_vector, self.sim.data.qM)
