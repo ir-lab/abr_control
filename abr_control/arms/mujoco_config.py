@@ -311,10 +311,6 @@ class MujocoConfig:
         if not self.use_sim_state and q is not None:
             old_q, old_dq, old_u = self._load_state(q)
         
-        indices = np.array([], dtype=np.int32)
-        for i in range(3):
-            indices = np.hstack((indices, self.M_indices[i]))
-        
         # n_joints = sum([self.N_JOINTS[i] for i in range(3)])
         # stored in mjData.qM, stored in custom sparse format,
         # convert qM to a dense matrix with mj_fullM

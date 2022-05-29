@@ -5,11 +5,11 @@
     </asset>
 
     <worldbody>
-        <body name="nist_male" pos="0.0 0.325 0.01">
+        <body name="nist_male" pos="0.0 -0.325 0.01">
             <inertial pos="0 0 0" mass="1.0" diaginertia="0.1 0.1 0.1"/>
             <geom name="nist_male" type="mesh" mesh="nist_male" pos="0 0 0" material="silver" conaffinity="1" contype="2"/>
         </body>
-        <body name="nist_female" pos="0.0 0.475 0.001">
+        <body name="nist_female" pos="0.0 -0.475 0.001">
             <inertial pos="0 0 0" mass="1.0" diaginertia="0.1 0.1 0.1"/>
             <geom name="nist_female" type="mesh" mesh="nist_female" pos="0 0 0" material="black" conaffinity="1" contype="2"/>
         </body>
