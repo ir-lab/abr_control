@@ -53,11 +53,11 @@
         <body name="hand_ur5left" pos="0 0 -0.15" mocap="true">
             <geom type="box" size=".01 .01 .01" rgba="0 0 1 .5" contype="2" conaffinity="2"/>
         </body>
-        
-        <body name="origin_base" pos="0.0 0.0 0.0" euler="0 0 3.14159">
+
+        <body name="origin_base" pos="0.0 0.0 0.0" euler="0 0 0">
             <body name="dual_ur_stand" pos="0.0 0.0 0.0" euler="0 0 3.14159">
                 <joint name="ur_stand_joint" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
-                <body name="EE_ur_stand" pos="0 0 0" euler="0 0 0"></body>
+                <body name="ur_stand_dummy" pos="0 0 0" euler="0 0 0"></body>
                 <!-- <joint name="ur_stand_joint_sliding" axis="0 0 1" pos="0 0 0" type="slide"/> -->
                 <inertial pos="0 0 0" mass="20.0" diaginertia="0.25 0.25 0.25"/>
                 <geom name="ur_stand_base" type="mesh" mesh="dual_ur_stand" pos="0 0 0" material="grey" conaffinity="1" contype="2"/>
@@ -273,6 +273,7 @@
         <motor name="joint4_motor_ur5right" joint="joint4_ur5right"/>
         <motor name="joint5_motor_ur5right" joint="joint5_ur5right"/>
 
+        <motor name='gripper_ur5right' joint='right_outer_knuckle_joint_ur5right' />
 
         <motor name="joint0_motor_ur5left" joint="joint0_ur5left"/>
         <motor name="joint1_motor_ur5left" joint="joint1_ur5left"/>
@@ -281,17 +282,16 @@
         <motor name="joint4_motor_ur5left" joint="joint4_ur5left"/>
         <motor name="joint5_motor_ur5left" joint="joint5_ur5left"/>
 
-        <motor name='gripper_ur5right' joint='right_outer_knuckle_joint_ur5right' />
         <motor name="gripper_ur5left" joint='right_outer_knuckle_joint_ur5left' />
     </actuator>
 
-    <sensor>
+    <!-- <sensor>
         <force name="force_ee_ur5right" site="ft_frame_ur5right"/>
         <torque name="torque_ee_ur5right" site="ft_frame_ur5right"/>
 
         <force name="force_ee_ur5left" site="ft_frame_ur5left"/>
         <torque name="torque_ee_ur5left" site="ft_frame_ur5left"/>
-    </sensor>
+    </sensor> -->
 
     <equality>
         <joint joint1="right_outer_knuckle_joint_ur5right" joint2="right_inner_finger_joint_ur5right" polycoef="0 -1.1 0 0 0" />

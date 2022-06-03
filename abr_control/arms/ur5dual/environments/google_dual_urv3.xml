@@ -6,7 +6,7 @@
     
     <include file="world.xml"/>
 
-    <include file="../data/dual_ur_stand/dual_ur5v3.xml"/>
+    <include file="../data/dual_ur_stand/dual_ur5v3o.xml"/>
 
     <include file="../data/dual_pegs/grommet_11mm.xml"/>
 
