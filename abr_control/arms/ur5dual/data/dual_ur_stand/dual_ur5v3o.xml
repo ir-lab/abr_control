@@ -36,7 +36,8 @@
         <mesh name="robotiq_arg2f_85_inner_finger_vis" file="robotiq_85_gripper/robotiq_arg2f_85_inner_finger_vis.stl" scale="0.001 0.001 0.001" />
         <mesh name="robotiq_arg2f_85_inner_knuckle_vis" file="robotiq_85_gripper/robotiq_arg2f_85_inner_knuckle_vis.stl" scale="0.001 0.001 0.001" />
 
-        <mesh name="dual_ur_stand"    file="dual_ur_stand/dual_ur_stand.stl" />
+        <mesh name="dual_ur_stand_ring" file="dual_ur_stand/dual_ur_stand_ring.stl" />
+        <mesh name="dual_ur_stand"  file="dual_ur_stand/dual_ur_stand2.stl" />
     </asset>
 
     <worldbody>
@@ -55,6 +56,8 @@
         </body>
         
         <body name="origin_base" pos="0.0 0.0 0.0" euler="0 0 0">
+            <inertial pos="0 0 0" mass="100.0" diaginertia="0.1 0.1 0.1"/>
+            <geom name="ur_stand_ring" type="mesh" mesh="dual_ur_stand_ring" pos="0 0 0" material="grey" conaffinity="1" contype="2"/>
             <body name="dual_ur_stand" pos="0.0 0.0 0.0" euler="0 0 0">
                 <joint name="ur_stand_joint" axis="0 0 1" pos="0 0 0" limited="true" range="-6.28319 6.28319"/>
                 <body name="ur_stand_dummy" pos="0 0 0" euler="0 0 0"></body>
